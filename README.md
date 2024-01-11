@@ -1,4 +1,5 @@
-# Optimizer-Suite for Distribution functions of FountainCodes for non-Gaussian Error-Channels
+# OFC4DNA: Optimizing Fountain Codes 4 DNA Storage
+### Optimizer-Suite for Distribution functions of FountainCodes for non-Gaussian Error-Channels
 
 This tool is intended to be used for optimizing the distribution functions of FountainCodes for non-Gaussian error
 channels.
