@@ -1,0 +1,4 @@
+[submodule "NOREC4DNA"]
+	path = NOREC4DNA
+	url = https://github.com/umr-ds/NOREC4DNA.git
+	branch = feature/dna_seed_spacing
