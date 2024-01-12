@@ -103,16 +103,19 @@ for a typical desktop pc, a runtime in the order of multiple days has to be expe
 
 #### Running on a server using docker:
 
-> mkdir dist_opt_volume
+> mkdir ofc4dna_volume
 >
-> docker build -t dist_opt .
+> docker build -t ofc4dna .
 >
-> docker run -d --name dist_opt --mount source=dist_opt_volume,target=/optimize/results dist_opt
+> docker run -d --name ofc4dna --mount source=ofc4dna_volume,target=/optimize/results ofc4dna
 >
-> docker logs -f dist_opt
+> docker logs -f ofc4dna
 
 by default, the container will run the optimization suite with the default parameters.
 
+#### Docker-hub image:
+The image is also available on docker-hub:
+[https://hub.docker.com/r/mosla/ofc4dna](https://hub.docker.com/r/mosla/ofc4dna)
 
 ### Other improvements:
 All improvemtns shown in the paper were directly integrated into the NOREC4DNA framework and can either directly or 

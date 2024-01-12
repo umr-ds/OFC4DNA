@@ -14,7 +14,7 @@ RUN apt-get update -y \
 ##ENV VIRTUAL_ENV=/opt/venv
 ##RUN python3 -m venv $VIRTUAL_ENV
 ##ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN cd NOREC4DNA && pip3 install wheel && pip3 install -r requirements.txt --no-cache-dir && python3 setup.py install && cd ..
+RUN cd NOREC4DNA && pip3 install wheel && pip3 install -r requirements.txt --no-cache-dir && python3 setup.py install && cd .. && pip install -r requirements.txt --no-cache-dir
 #RUN chmod +x setup.sh && .\setup.sh
 RUN apt-get purge -y --auto-remove build-essential \
  && apt-get clean \
@@ -22,8 +22,8 @@ RUN apt-get purge -y --auto-remove build-essential \
 
 
 # squash / reduce size
-FROM scratch
-COPY --from=builder / /
+#FROM scratch
+#COPY --from=builder / /
 WORKDIR /optimize
 ##ENV VIRTUAL_ENV=/opt/venv
 ##ENV PATH="$VIRTUAL_ENV/bin:$PATH"
