@@ -7,7 +7,7 @@ It is based on the NOREC4DNA framework ( https://github.com/umr-ds/NOREC4DNA ) a
 Evolutionary Optimization and Gradient Descent algorithms to improve the distribution functions for a given (set of)
 file(s) under various configurable conditions.
 
-As this tool was created as part of a research project for the field for DNA storage, it is currently optimized for this
+As this tool was created as part of a research project for the field of DNA storage, it is currently optimized for this
 use case.
 
 ### Requirements
@@ -30,10 +30,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-This will install all required dependencies including the NOREC4DNA framework in the virtual environment.
-The installation should take less than 5 minutes on a typical desktop pc, but can take longer if an older pip version is
+This will install all required dependencies, including the NOREC4DNA framework, in the virtual environment.
+The installation should take less than 5 minutes on a typical desktop PC, but can take longer if an older pip version is
 used or if dependency conflicts exists
-(e.g. if no virtual environment is used).
+(e.g., if no virtual environment is used).
 
 ### Usage:
 
@@ -98,8 +98,8 @@ the number of input files and the number of chunks.
 For Evolutionary Optimization and Differential Evolution, the process can be parallelized by using multiple processes.
 This is limited by the population size.
 
-When using multiple input files, chunk sizes, repeats as well as a population size of 100+ and 200+ generations,
-for a typical desktop pc, a runtime in the order of multiple days has to be expected.
+When using multiple input files, chunk sizes, repeats, and a population size of 100+ and 200+ generations, 
+for a typical desktop PC, a runtime in the order of multiple days has to be expected.
 
 #### Running on a server using docker:
 
@@ -111,15 +111,15 @@ for a typical desktop pc, a runtime in the order of multiple days has to be expe
 >
 > docker logs -f ofc4dna
 
-by default, the container will run the optimization suite with the default parameters.
+By default, the container will run the optimization suite with the default parameters.
 
 #### Docker-hub image:
 The image is also available on docker-hub:
 [https://hub.docker.com/r/mosla/ofc4dna](https://hub.docker.com/r/mosla/ofc4dna)
 
 ### Other improvements:
-All improvemtns shown in the paper were directly integrated into the NOREC4DNA framework and can either directly or 
-using this optimization suite.
+All improvements shown in this work were directly integrated into the NOREC4DNA framework and can be used either 
+directly or using this optimization suite.
 For more information, see the NOREC4DNA repository:
 [https://github.com/umr-ds/NOREC4DNA](https://github.com/umr-ds/NOREC4DNA)
 
