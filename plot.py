@@ -24,16 +24,16 @@ def plot_dist(dst, save=False, name=None):
     :return:
     """
     dist = plt.plot([x for x in range(0, 41)], [x * 100 for x in [0] + dst.dist_lst], 'b',
-                    label='distribution function')
+                    label='Distribution function')
     plt.xlim([1, 40])
-    plt.xlabel("degree")
-    plt.ylabel("probability [%]")
-    err = plt.plot([], [], ' ', label="avg error: " + str(round(dst.avg_err, 5)))
-    over = plt.plot([], [], ' ', label="overhead: " + str(round(dst.overhead, 3)))
-    clean_avg_error = plt.plot([], [], ' ', label="clean avg err: " + str(round(dst.clean_avg_error, 3)))
-    clean_deg_len = plt.plot([], [], ' ', label="clean deg len: " + str(round(dst.clean_deg_len, 3)))
-    calculated_error_value = plt.plot([], [], ' ', label="syn. error: " + str(round(dst.calculated_error_value, 5)))
-    non_unique_packets = plt.plot([], [], ' ', label="non unique packets: " + str(round(dst.non_unique_packets, 3)))
+    plt.xlabel("Degree")
+    plt.ylabel("Probability [%]")
+    err = plt.plot([], [], ' ', label="Avg error: " + str(round(dst.avg_err, 5)))
+    over = plt.plot([], [], ' ', label="Overhead: " + str(round(dst.overhead, 3)))
+    clean_avg_error = plt.plot([], [], ' ', label="Clean avg err: " + str(round(dst.clean_avg_error, 3)))
+    clean_deg_len = plt.plot([], [], ' ', label="Clean deg len: " + str(round(dst.clean_deg_len, 3)))
+    calculated_error_value = plt.plot([], [], ' ', label="Ayn. error: " + str(round(dst.calculated_error_value, 5)))
+    non_unique_packets = plt.plot([], [], ' ', label="Non unique packets: " + str(round(dst.non_unique_packets, 3)))
     lns = dist + err + over + clean_avg_error + clean_deg_len + calculated_error_value + non_unique_packets
     labs = [l.get_label() for l in lns]
     plt.legend(lns, labs, loc='best')
@@ -59,9 +59,9 @@ def plot_dist_with_raptor(dst, save=False, name=None):
     rap = plt.plot([x for x in range(1, 41)], [x * 100 for x in rap_list], 'r',
                    label='Raptor distribution function')
     dist = plt.plot([x for x in range(1, 41)], [x * 100 for x in dst.dist_lst], 'b',
-                    label='distribution function EA')
-    plt.xlabel("degree")
-    plt.ylabel("probability [%]")
+                    label='Distribution function EA')
+    plt.xlabel("Degree")
+    plt.ylabel("Probability [%]")
     lns = dist + rap
     labs = [l.get_label() for l in lns]
     plt.legend(lns, labs, loc='best')
@@ -90,7 +90,7 @@ def plot_errs_final(dists, save=False, name=None):
     poly1d = np.poly1d(coef)
     plt.plot(gens, err_list, 'k', poly1d(gens), '--r')
     plt.xlabel('Generation')
-    plt.ylabel('best average error')
+    plt.ylabel('Best average error')
     plt.grid()
     if save:
         if name is None:
@@ -118,12 +118,12 @@ def plot_avg_errs_final(avg_errs, gen_calculated_error=None, save=False, name=No
     err = plt.plot(gens, avg_errs, 'ok', label="average error", markersize=3)
     err_f = plt.plot(gens, err_poly1d(gens), '--k', label=str(err_poly1d).split("\n")[1])
     plt.xlabel('Generation')
-    plt.ylabel('average error')
+    plt.ylabel('Average error')
     plt.grid()
     plt.twinx()
     calc_err = plt.plot(gens, gen_calculated_error, 'ob', label="average synthetic error", markersize=3)
     calc_err_f = plt.plot(gens, calc_err_poly1d(gens), '--b', label=str(calc_err_poly1d).split("\n")[1])
-    plt.ylabel('average synthetic error')
+    plt.ylabel('Average synthetic error')
     lns = err + calc_err + err_f + calc_err_f
     labs = [l.get_label() for l in lns]
     plt.legend(lns, labs, loc='best')
@@ -172,7 +172,7 @@ def plot_from_pop_csv_log(filename, save=False, name=None, overhead_fac=0.5):
     plt.plot(gens, err_list, 'k')
     plt.plot(gens, poly1d(gens), '--r', label=str(poly1d).split("\n")[1].split("+")[0])
     plt.xlabel('Generation')
-    plt.ylabel('average error + weighted Overhead')
+    plt.ylabel('Average error + weighted overhead')
     plt.grid()
     plt.legend(loc='best')
     if save:
@@ -196,7 +196,7 @@ def plot_multiple_evo_res(gen_best_res, title):
         gens = [x for x in range(1, len(err_list) + 1)]
         plt.plot(gens, err_list, label=elem[0])
     plt.xlabel('Generation')
-    plt.ylabel('best average error per Generation')
+    plt.ylabel('Best average error per Generation')
     plt.legend(loc='best')
     plt.title(title)
     plt.show(block=False)
@@ -217,8 +217,8 @@ def plot_comparison_results(err_res, calcualted_syn_err_val, gens, param_vals, p
     for i in range(len(err_res)):
         plt.plot(gens, err_res[i](gens), label=param + " = " + str(param_vals[i]))
     plt.xlabel('Generation')
-    plt.ylabel('average error')
-    plt.ylabel('error probability')
+    plt.ylabel('Average error')
+    plt.ylabel('Error probability')
     plt.legend(loc='best')
     plt.grid()
     plt.savefig(method + "_err_" + param + ".svg", format="svg", dpi=1200)
@@ -226,8 +226,8 @@ def plot_comparison_results(err_res, calcualted_syn_err_val, gens, param_vals, p
     for i in range(len(calcualted_syn_err_val)):
         plt.plot(gens, calcualted_syn_err_val[i](gens), label=param + " = " + str(param_vals[i]))
     plt.xlabel('Generation')
-    plt.ylabel('average calculated synthetic error value')
-    plt.ylabel('calculated synthetic error value')
+    plt.ylabel('Average calculated synthetic error value')
+    plt.ylabel('Calculated synthetic error value')
     plt.legend(loc='best')
     plt.grid()
     plt.savefig(method + "_over_" + param + ".svg", format="svg", dpi=1200)
@@ -245,7 +245,7 @@ if __name__ == "__main__":
 
     for folder in ["all_1000", "all", "bmp_low_entropy", "image_high_entropy", "text_medium_entropy",
                    "text_medium_high_entropy"]:
-        fille = f"../dist_opt_results/{folder}/_data/evo_opt_state.json"
+        fille = f"./results/dist_opt_results/{folder}/_data/evo_opt_state.json"
 
         with open(fille, "r") as ff_file:
             tmp = json.load(ff_file)
@@ -266,9 +266,9 @@ if __name__ == "__main__":
         fig, ax1 = plt.subplots()
 
         ax2 = ax1.twinx()
-        ax2.plot(overhead_lst, label="overhead")
+        ax2.plot(overhead_lst, label="Overhead")
         ax2.set_ylabel("Overhead")
-        ax1.plot(avg_err_lst, label="average error")
+        ax1.plot(avg_err_lst, label="Average error")
         ax1.set_ylabel("Average error")
         ax1.plot(calculated_erro_value_lst, label="Calculated error value", color='red')
         plt.title(folder.replace("_", " "))

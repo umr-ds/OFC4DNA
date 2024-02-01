@@ -3,6 +3,7 @@ import json
 import math
 import multiprocessing
 import os
+import zipfile
 from datetime import datetime
 
 import matplotlib
@@ -20,7 +21,7 @@ from NOREC4DNA.norec4dna.rules.FastDNARules import FastDNARules
 
 # increase seaborn font size
 sns.set(font_scale=1.25)
-matplotlib.rcParams.update({'figure.autolayout': True})
+# matplotlib.rcParams.update({'figure.autolayout': True})
 
 files = ["Dorn", "logo.jpg", "logo_mosla_bw.bmp", "Uni_Marburg_Logo.bmp", "Uni_Marburg_Siegel_sw.bmp", "Dorn.zip"]
 chunk_sizes = [40, 60, 80, 100]
@@ -60,31 +61,34 @@ def process_combination(args):
 def create_graphs(csv_filename):
     # load csv into pandas dataframe:
     df = pd.read_csv(csv_filename)
+    # replace "_" in all column names with " ":
+    df.columns = df.columns.str.replace("_", " ").str.capitalize()
+
     # add a column "seed_len" to the dataframe:
     df["seed_struct_str"] = "H"
-    rows_of_interest = ["file", "rule_violating_packets", "id_spacing", "use_payload_xor", "avg_error", "chunk_size",
-                        "mask_id"]
-    for hue_to_use in ["file", "id_spacing", "use_payload_xor", "chunk_size", "mask_id"]:
+    rows_of_interest = ["File", "Rule violating packets", "Id spacing", "Use payload xor", "Avg error", "Chunk size",
+                        "Mask id"]
+    for hue_to_use in ["File", "Id spacing", "Use payload xor", "Chunk size", "Mask id"]:
         sns.pairplot(data=df[rows_of_interest], hue=hue_to_use, palette="deep")
         plt.savefig(f"pair_{hue_to_use}.svg", format="svg", dpi=1200)
         plt.savefig(f"pair_{hue_to_use}.pdf", bbox_inches="tight")
         plt.show(block=False)
     # sns.scatterplot(data=df, x="chunk_size", y="rule_violating_packets", hue="file",
     #                style="id_spacing", size="use_payload_xor", palette="deep")
-    g = df.groupby(["file", "chunk_size"])
+    g = df.groupby(["File", "Chunk size"])
     for file_name, group in g:
         file_name, chunk_size = file_name
-        pl = sns.scatterplot(data=group, x="id_spacing", y="rule_violating_packets", hue="mask_id",
-                             style="use_payload_xor", palette="deep")
-        pl.set_ylabel("rule_violating_packets")
+        pl = sns.scatterplot(data=group, x="Id spacing", y="Rule violating packets", hue="Mask id",
+                             style="Use payload xor", palette="deep")
+        pl.set_ylabel("Rule violating packets")
         pl.set_title(f"{file_name} - Chunksize: {chunk_size}")
         plt.savefig(f"err_{file_name}_{chunk_size}.svg", format="svg", dpi=1200)
         plt.savefig(f"err_{file_name}_{chunk_size}.pdf", bbox_inches="tight")
         plt.show(blocK=False)
 
-    g2 = df.groupby(["id_spacing", "chunk_size", "file"]).mean()
-    sns.scatterplot(data=g2, x="id_spacing", y="rule_violating_packets", hue="chunk_size", style="file", palette="deep")
-    pl.set_ylabel("rule_violating_packets")
+    g2 = df.groupby(["Id spacing", "Chunk size", "File"]).mean()
+    sns.scatterplot(data=g2, x="Id spacing", y="Rule violating packets", hue="Chunk size", style="File", palette="deep")
+    pl.set_ylabel("Rule violating packets")
     plt.savefig(f"err_scatter_{file_name}_{chunk_size}.svg", format="svg", dpi=1200)
     plt.savefig(f"err_scatter_{file_name}_{chunk_size}.pdf", bbox_inches="tight")
     plt.show(block=False)
@@ -99,21 +103,21 @@ def create_graphs(csv_filename):
         grouped_data = tmp_data.groupby(['chunk_size'])  # .agg(mean=("rule_violating_packets", "mean"))
         # grouped_data.reset_index()
         for chunk_size, group in grouped_data:
-            sns.barplot(x="id_spacing", y="rule_violating_packets", errorbar='sd', capsize=0.09, data=group,
+            sns.barplot(x="Id spacing", y="Rule violating packets", errorbar='sd', capsize=0.09, data=group,
                         label=chunk_size)
         # Create the Seaborn line plot with error bars
         # plt.figure(figsize=(10, 6))
         sns.set(style="whitegrid")
         try:
-            plot = sns.lineplot(x="id_spacing", y="mean", hue="chunk_size", data=grouped_data)
+            plot = sns.lineplot(x="Id spacing", y="mean", hue="Chunk size", data=grouped_data)
             plot = pd.crosstab(tmp_data.chunk_size, tmp_data.id_spacing, tmp_data.rule_violating_packets).plot(
                 kind='bar')
-            plot.errorbar(grouped_data["id_spacing"], grouped_data["mean"], yerr=grouped_data["std"], fmt='o',
+            plot.errorbar(grouped_data["Id spacing"], grouped_data["mean"], yerr=grouped_data["std"], fmt='o',
                           markersize=4)
 
-            plot.set_title(f"Influence of id_spacing on rule_violating_packets {file_name}")
-            plot.set_xlabel("id_spacing")
-            plot.set_ylabel("Mean rule_violating_packets")
+            plot.set_title(f"Influence of 'id spacing' on 'rule violating packets' {file_name}")
+            plot.set_xlabel("Id spacing")
+            plot.set_ylabel("Mean 'rule violating packets'")
             plt.autoscale()
             plt.savefig(f"line_{file_name}.svg", format="svg", dpi=1200)
             plt.savefig(f"line_{file_name}.pdf", bbox_inches="tight")
@@ -155,21 +159,24 @@ def plot_err_nums(label_file_names):
     plt.show(block=False)
 
 
-def get_packets():
+def get_packets(seed_struct_str="H"):
     packets = []
     for i in [True, False]:
         packets.append(encode(file="logo_mosla_bw.bmp", chunk_size=40, dist=dists[0], rules=rules,
                               return_packets=True, repeats=repeats, id_spacing=0,
                               mask_id=False, use_payload_xor=i,
-                              seed_struct_str="H", return_packet_error_vals=False,
+                              seed_struct_str=seed_struct_str, return_packet_error_vals=False,
                               store_packets=True))
     # print([(packets[0][i], packets[4][i]) for i in range(len(packets[0])) if
     #       packets[0][i].error_prob > packets[4][i].error_prob])
     data = [(len([(packets[0][i], packets[k][i]) for i in range(len(packets[0])) if
                   packets[0][i].error_prob > packets[k][i].error_prob]),
              len([(packets[0][i], packets[k][i]) for i in range(len(packets[0])) if
-                  packets[0][i].error_prob < packets[k][i].error_prob])) for k in range(9)]
+                  packets[0][i].error_prob < packets[k][i].error_prob])) for k in range(len(packets))]
     """
+    # data for 2 byte seed:
+    data = [(1526, 1478), (2050, 1972), (2533, 2531), (3077, 3023), (3188, 3038), (3239, 3014), (3301, 3159), (3289, 3212)]
+    # data for 4 byte seed:
     data = [(319943, 79185), (363581, 67776), (393642, 69167), (418473, 70606), (414770, 76321), (415726, 77589),
             (416529, 76359), (416711, 76865)]
     """
@@ -191,17 +198,19 @@ def get_packets():
     # Set the x-ticks from 1 to 15
     plt.xticks(x_values[:-1], x_values[:-1])
     # Label the axes and add a title
-    plt.xlabel('Seed-Spacing')
+    plt.xlabel('Seed spacing')
     plt.ylabel('Packets')
     # plt.yscale("log")
-    plt.title('Additional (in)valid packets: 4 byte seed')
+    plt.title(f"Additional (in)valid packets: {'2' if seed_struct_str == 'H' else '4'} byte seed")
     plt.xticks(x_values, x_values)  # Set x-tick labels as the indices
 
     # Add a legend
     plt.legend(loc="right")
     plt.autoscale()
-    plt.savefig("additional_valid_invalid_packets_1310720.pdf", format="svg", dpi=1200)
-    plt.savefig("additional_valid_invalid_packets_1310720.pdf", bbox_inches="tight")
+    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else '1310720'}.svg", format="svg",
+                dpi=1200)
+    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else '1310720'}.pdf",
+                bbox_inches="tight")
     # Show the plot
     plt.show()
     # """
@@ -222,9 +231,14 @@ def compare_variants_with_packets():
 
 def parse_all_files():
     # change working directory:
-    os.chdir("./err_nums_07_09")
+    # save current working directory:
+    cwd = os.getcwd()
+    os.chdir("./eval/err_nums")
+    # open err_nums.zip and get all files:
+    with zipfile.ZipFile("err_nums.zip", "r") as zip_ref:
+        zip_ref.extractall(".")
     # get all files starting with "err_nums" in the current directory:
-    files = [f for f in os.listdir(".") if os.path.isfile(f) and f.startswith("err_nums")]
+    files = [f for f in os.listdir(".") if os.path.isfile(f) and f.startswith("err_nums") and not f.endswith(".zip")]
     # create empty dataframe:
     # df2 = pd.DataFrame(columns=["encoded_file", "use_payload_xor", "chunk_size", "id_spacing", "mask_id",
     #                            "seed_struct_str", "err_nums"])
@@ -254,6 +268,7 @@ def parse_all_files():
                     "seed_struct_str": seed_struct_str, "err_nums": err_num})
     df2 = pd.DataFrame(tmp)
     print(df2)
+    os.chdir(cwd)
 
 
 def plot_entropy_vs_xor_payload_vs_rule_violating_packets(file_name: str):
@@ -264,13 +279,17 @@ def plot_entropy_vs_xor_payload_vs_rule_violating_packets(file_name: str):
     tmp["file_entropy"] = tmp["file_entropy"].map(lambda x: float(x.replace("(", "").split(",")[0]))
     tmp["file_dna_entropy"] = tmp["file_dna_entropy"].map(lambda x: round(float(x.replace("(", "").split(",")[0]), 5))
     sns.barplot(x="file_dna_entropy", y="rule_violating_packets", hue="XOR payload", data=tmp)
-    plt.xlabel("file entropy (DNA)")
-    plt.ylabel("rule violating packets")
-    plt.title("rule violating packets (2 byte seed)")  # , 40 chunks, 0 spacing
+    plt.xlabel("File entropy (DNA)")
+    plt.ylabel("Rule violating packets")
+    plt.title("Rule violating packets (2 byte seed)")  # , 40 chunks, 0 spacing
 
+    # convert file_name to only contain the file name:
+    file_name = file_name.split("/")[-1]
+    # and remove the file ending:
+    file_name = file_name.split(".")[0]
     plt.autoscale()
-    plt.savefig(f"bar_rule_violating_vs_file_entropy{file_name.replace('.','_')}.svg", format="svg", dpi=1200)
-    plt.savefig(f"bar_rule_violating_vs_file_entropy.pdf{file_name.replace('.','_')}", bbox_inches="tight")
+    plt.savefig(f"bar_rule_violating_vs_file_entropy{file_name.replace('.', '_')}.svg", format="svg", dpi=1200)
+    plt.savefig(f"bar_rule_violating_vs_file_entropy.pdf{file_name.replace('.', '_')}.pdf", bbox_inches="tight")
     plt.show(block=False)
 
 
@@ -289,19 +308,19 @@ def plot_max_possible_unique_packets_per_deg(n, seed_len=2):
     ax1.set_yscale("log")
     ax1.set_xlabel("Degree")
     ax1.set_ylabel("Packets")
-    ax1.set_title("Number of Unique Packets per Degree")
+    ax1.set_title("Number of unique packets per degree")
     ax1.tick_params(axis="y", labelcolor="tab:blue")
     raptor_dist_func = norm_list(to_dist_list(raptor_dist))
     print(raptor_dist_func)
 
     possible_packets = math.pow(2, (seed_len * 8))
     res = [x * possible_packets for x in raptor_dist_func]
-    ax1.plot(range(1, max_deg + 1), res[:max_deg], label="possible Packets (Raptor)", color="tab:cyan")
+    ax1.plot(range(1, max_deg + 1), res[:max_deg], label="Possible packets (Raptor)", color="tab:cyan")
     # Create a secondary y-axis
     ax2 = ax1.twinx()
 
     # Plot the secondary y-axXis data
-    ax2.plot(range(1, max_deg + 1), raptor_dist_func[:max_deg], label="Raptor Distribution", color="tab:red")
+    ax2.plot(range(1, max_deg + 1), raptor_dist_func[:max_deg], label="Raptor distribution", color="tab:red")
     ax2.set_ylabel("Probability")
     ax2.tick_params(axis="y", labelcolor="tab:red")
     # Combine legends from both axes
@@ -360,40 +379,7 @@ def compare_dists(files=None, chunksize=40, seed_spacing=4, use_payload_xor=True
                      non_unique_packets])
 
 
-if __name__ == "__main__":
-    #plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare_2023-09-08_16-01-23.csv")
-    #exit()
-    # with open("dist_compare_2023-09-18_12-04-05.csv", "r") as f:
-    #df = pd.read_csv("eval/dist_compare_2023-09-18_14-11-11.csv")
-    #compare_dists([RaptorDistribution(100).f], files=["logo_mosla_bw.bmp", "Dorn", "aes_Dorn"], chunksize=40,
-    #              seed_spacing=4, use_payload_xor=True)
-    #exit(0)
-    plot_max_possible_unique_packets_per_deg(50)
-    plot_max_possible_unique_packets_per_deg(100)
-    plot_max_possible_unique_packets_per_deg(500)
-    plot_max_possible_unique_packets_per_deg(5000)
-    plot_max_possible_unique_packets_per_deg(50000)
-
-    plot_max_possible_unique_packets_per_deg(50, 4)
-    plot_max_possible_unique_packets_per_deg(100, 4)
-    plot_max_possible_unique_packets_per_deg(500, 4)
-    plot_max_possible_unique_packets_per_deg(5000, 4)
-    plot_max_possible_unique_packets_per_deg(50000, 4)
-    # parse_all_files()
-    #exit(0)
-    # get_packets()
-    # """
-    # err_nums_{file}_{mask_id}_{chunk_size}_{id_spacing}_{use_payload_xor}_{seed_struct_str}_{
-    # create_graphs("param_compare_2023-09-07_15-58-41.csv")  # "param_compare_2023-08-17_10-31-15.csv")
-    # create_graphs("param_compare_2023-09-08_10-10-36.csv")  # "param_compare_2023-08-17_10-31-15.csv")
-    plot_entropy_vs_xor_payload_vs_rule_violating_packets("param_compare_2023-09-08_16-01-23.csv")
-    # plot_err_nums([("plain IDs", "err_nums_07_09/err_nums_Dorn_False_40_0_False_H_2023-09-07_10-35-44.csv"),
-    #               ("XOR shuffled IDs", "err_nums_07_09/err_nums_Dorn_False_40_0_True_H_2023-09-07_10-35-05.csv")])
-    # plot_err_nums([("plain IDs", "err_num_results_base_spacing/err_nums_aes_Dorn_False_40_0_False_H_2023-09-06_10-20-36.csv"),
-    #               ("XOR shuffled IDs", "err_num_results_base_spacing/err_nums_aes_Dorn_True_40_0_False_H_2023-09-06_10-20-29.csv")])
-    #exit(0)
-    # """
-
+def create_new_param_compare_csv():
     output_filename = f"param_compare_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
     with open(output_filename, "w") as f:
         csv_writer = csv.writer(f, delimiter=",")
@@ -419,5 +405,44 @@ if __name__ == "__main__":
         for result in results:
             csv_writer.writerow(result)
 
+
+if __name__ == "__main__":
+    plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
+
+    compare_dists(files=["logo_mosla_bw.bmp", "Dorn", "aes_Dorn"], chunksize=40,
+                  seed_spacing=4, use_payload_xor=True)
+
+    plot_max_possible_unique_packets_per_deg(50)
+    plot_max_possible_unique_packets_per_deg(100)
+    plot_max_possible_unique_packets_per_deg(500)
+    plot_max_possible_unique_packets_per_deg(5000)
+    plot_max_possible_unique_packets_per_deg(50000)
+
+    plot_max_possible_unique_packets_per_deg(50, 4)
+    plot_max_possible_unique_packets_per_deg(100, 4)
+    plot_max_possible_unique_packets_per_deg(500, 4)
+    plot_max_possible_unique_packets_per_deg(5000, 4)
+    plot_max_possible_unique_packets_per_deg(50000, 4)
+
+    parse_all_files()
+
+    get_packets()
+
+    # depending on the file content, some plots may fail, this is expected and should not be a problem
+    try:
+        create_graphs("eval/param_compare/param_compare_2023-09-07_15-58-41.csv")  # "param_compare_2023-08-17_10-31-15.csv")
+    except Exception as e:
+        print(e)
+    try:
+        create_graphs("eval/param_compare/param_compare_2023-09-08_10-10-36.csv")  # "param_compare_2023-08-17_10-31-15.csv")
+    except Exception as e:
+        print(e)
+
+    plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
+    plot_err_nums([("plain IDs", "eval/err_nums/err_nums_Dorn_False_40_0_False_H_2023-09-07_10-35-44.csv"),
+                   ("XOR shuffled IDs", "eval/err_nums/err_nums_Dorn_False_40_0_True_H_2023-09-07_10-35-05.csv")])
+
     """
-    # """
+    # Code to generate a new "param_compare" csv file (configure at the top of the file!):
+    create_new_param_compare_csv
+    """
