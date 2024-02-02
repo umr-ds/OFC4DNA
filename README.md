@@ -77,19 +77,23 @@ python OptimizationSuite.py --repeats 5 --avg_error_fac 0.3 --seed_spacing 2 --f
 
 The resulting data will be stored in the matching folders (e.g. `results_evo`)
 
-##### Example output:
+##### Output:
 
-The `results` folder contains example data for various input files.
+The `results` folder contains all results including any intermediate data for the input files.
 
-```bash
-python OptimizationSuite.py
-```
+###### Missing "results" folder:
+As the "results" folder is not required to perform new optimization and would drastically increase the repository
+size by including a huge amount of data (e.g., each generation for each experiment, including graphs for each iteration), 
+they are stored in an external repository.
+All results can be downloaded from this repository: https://github.com/thejanky/OFC4DNA_results/
+
 
 ### Evaluation
 
 The results can be parsed and evaluated using the `eval_and_plot.ipynb` Notebook.
 
 Results for various example input files are already included in the `eval` folder.
+
 ### Runtime
 
 The runtime depends on various factors, such as the number of repeats, the number of generations, the population size,
@@ -101,7 +105,7 @@ This is limited by the population size.
 When using multiple input files, chunk sizes, repeats, and a population size of 100+ and 200+ generations, 
 for a typical desktop PC, a runtime in the order of multiple days has to be expected.
 
-#### Running on a server using docker:
+#### Running (on a server) using docker:
 
 > mkdir ofc4dna_volume
 >
