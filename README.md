@@ -85,7 +85,7 @@ The `results` folder contains all results including any intermediate data for th
 As the "results" folder is not required to perform new optimization and would drastically increase the repository
 size by including a huge amount of data (e.g., each generation for each experiment, including graphs for each iteration), 
 they are stored in an external repository.
-All results can be downloaded from this repository: https://github.com/thejanky/OFC4DNA_results/
+All results can be downloaded from this repository: https://github.com/umr-ds/OFC4DNA_results/
 
 
 ### Evaluation
