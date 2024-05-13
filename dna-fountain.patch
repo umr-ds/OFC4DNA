@@ -1,0 +1,678 @@
+diff --git a/Dorn b/Dorn
+new file mode 100644
+index 0000000..9a9860e
+--- /dev/null
++++ b/Dorn
+@@ -0,0 +1 @@
++Ein Koenig und eine Koenigin kriegten gar keine Kinder, und haetten so gern eins gehabt. Einmal sass die Koenigin im Bade, da kroch ein Krebs aus dem Wasser ans Land und sprach: 'dein Wunsch wird bald erfuellt werden und du wirst eine Tochter zur Welt bringen.' Das traf auch ein, und der Koenig war so erfreut ueber die Geburt der Prinzessin, dass er ein grosses Fest anstellen liess, und dazu lud er auch die Feen ein, die im Lande waren, weil er nur zwoelf goldene Teller hatte, konnte er eine nicht einladen: es waren ihrer nemlich dreizehen. Die Feen kamen zu dem Fest, und beschenkten das Kind am Ende desselben: die eine mit Tugend, die zweite mit Schoenheit und so die andern mit allem, was nur auf der Welt herrlich und zu wuenschen war, wie aber eben die elfte ihr Geschenk gesagt hatte, trat die dreizehnte herein, recht zornig, dass sie nicht war eingeladen worden und rief: 'weil ihr mich nicht gebeten, so sage ich euch, dass eure Tochter in ihrem funfzehnten Jahre an einer Spindel sich stechen und todt hinfallen wird.' Die Eltern erschracken, aber die zwoelfte Fee hatte noch einen Wunsch zu thun, da sprach sie: 'es soll aber kein Tod seyn, sie soll nur hundert Jahr in einen tiefen Schlaf fallen.' Der Koenig hoffte immer noch sein liebes Kind zu erretten, und liess den Befehl ausgehen, dass alle Spindeln im ganzen Koenigreich sollten abgeschafft werden. Die Prinzessin aber wuchs heran, und war ein Wunder von Schoenheit. Eines Tags, als sie ihr funfzehntes Jahr eben erreicht hatte, war der Koenig und die Koenigin ausgegangen, und sie ganz allein im Schloss, da ging sie aller Orten herum nach ihrer Lust, endlich kam sie auch an einen alten Thurm. Eine enge Treppe fuehrte dazu, und da sie neugierig war, stieg sie hinauf und gelangte zu einer kleinen Thuere, darin steckte ein gelber Schluessel, den drehte sie um, da sprang die Thuere auf und sie war in einem kleinen Stuebchen, darin sass eine alte Frau und spann ihren Flachs. Die alte Frau gefiel ihr wohl, und sie machte Scherz mit ihr und sagte, sie wollte auch einmal spinnen, und nahm ihr die Spindel aus der Hand. Kaum aber hatte sie die Spindel angeruehrt, so stach sie sich damit, und alsbald fiel sie nieder in einen tiefen Schlaf. In dem Augenblick kam der Koenig mit dem ganzen Hofstaat zurueck, und da fing alles an einzuschlafen, die Pferde in den Staellen, die Tauben auf dem Dach, die Hunde im Hof, die Fliegen an den Waenden, ja das Feuer, das auf dem Heerde flackerte, ward still und schlief ein, und der Braten hoerte auf zu brutzeln, und der Koch liess den Kuechenjungen los, den er an den Haaren ziehen wollte, und die Magd liess das Huhn fallen, das sie rupfte und schlief, und um das ganze Schloss zog sich eine Dornhecke hoch und immer hoeher, so dass man gar nichts mehr davon sah. Prinzen, die von dem schoenen Dornroeschen gehoert hatten, kamen und wollten es befreien, aber sie konnten durch die Hecke nicht hindurch dringen, es war als hielten sich die Dornen fest wie an Haenden zusammen, und sie blieben darin haengen und kamen jaemmerlich um. So waehrte das lange, lange Jahre: da zog einmal ein Koenigssohn durch das Land, dem erzaehlte ein alter Mann davon, man glaube, dass hinter der Dornhecke ein Schloss stehe, und eine wunderschoene Prinzessin schlafe darin mit ihrem ganzen Hofstaat; sein Grossvater habe ihm gesagt, dass sonst viele Prinzen gekommen waeren und haetten hindurchdringen wollen, sie waeren aber in den Dornen haengen geblieben und todtgestochen worden. 'Das soll mich nicht schrecken, sagte der Koenigssohn, ich will durch die Hecke dringen und das schoene Dornroeschen befreien;' da ging er fort, und wie er zu der Dornhecke kam, waren es lauter Blumen, die thaten sich von einander, und er ging hindurch, und hinter ihm wurden es wieder Dornen. Da kam er ins Schloss, und in dem Hof lagen die Pferde und schliefen, und die bunten Jagdhunde, und auf dem Dach sassen die Tauben und hatten ihre Koepfchen in den Fluegel gesteckt, und wie er hineinkam, schliefen die Fliegen an den Waenden, und das Feuer in der Kueche, der Koch und die Magd, da ging er weiter, da lag der ganze Hofstaat und schlief, und noch weiter, der Koenig und die Koenigin; und es war so still, dass einer seinen Athem hoerte, da kam er endlich in den alten Thurm, da lag Dornroeschen und schlief. Da war der Koenigssohn so erstaunt ueber ihre Schoenheit, dass er sich bueckte und sie kuesste, und in dem Augenblick wachte sie auf, und der Koenig und die Koenigin, und der ganze Hofstaat, und die Pferde und die Hunde, und die Tauben auf dem Dach, und die Fliegen an den Waenden, und das Feuer stand auf und flackerte und kochte das Essen fertig, und der Braten brutzelte fort, und der Koch gab dem Kuechenjungen eine Ohrfeige, und die Magd rupfte das Huhn fertig. Da ward die Hochzeit von dem Koenigssohn mit Dornroeschen gefeiert, und sie lebten vergnuegt bis an ihr Ende.
+\ No newline at end of file
+diff --git a/calc_mfe.py b/calc_mfe.py
+new file mode 100644
+index 0000000..c3657cd
+--- /dev/null
++++ b/calc_mfe.py
+@@ -0,0 +1,37 @@
++import typing
++import RNA
++
++md = RNA.md()
++md.temperature = 37
++md.dangles = 1
++
++
++def load_fasta(fasta_file: str) -> typing.Dict[str, str]:
++    """
++    Loads fasta file and returns a dictionary of sequences
++    """
++    fasta_dict = {}
++    with open(fasta_file, 'r') as f:
++        for line in f:
++            if line.startswith('>'):
++                seq_name = line.strip().replace(" ","_").split()[0][1:]
++                fasta_dict[seq_name] = ''
++            else:
++                fasta_dict[seq_name] += line.strip()
++    return fasta_dict
++
++
++if __name__ == "__main__":
++    fsta = load_fasta("sb_space2_payloadxor.dna")
++    res = []
++    for (key, value) in fsta.items():
++        # create a fold compound
++        fc = RNA.fold_compound(value, md)
++
++        # predict Minmum Free Energy and corresponding secondary structure
++        (ss, mfe) = fc.mfe()
++        res.append(mfe)
++        # print sequence, structure and MFE
++        # print("{}\n{} [ {:6.2f} ]".format(value, ss, mfe))
++    print(res)
++    print(sum(res)/len(res))
+\ No newline at end of file
+diff --git a/calc_seed_homopolymer.c b/calc_seed_homopolymer.c
+new file mode 100644
+index 0000000..c5ddd7c
+--- /dev/null
++++ b/calc_seed_homopolymer.c
+@@ -0,0 +1,55 @@
++#include <stdio.h>
++#include <string.h>
++
++#define MAX_TERNARY_LENGTH 35
++
++void decimalToTernary(unsigned int decimal, char* ternary) {
++    int index = 0;
++    while (decimal > 0) {
++        ternary[index++] = (decimal & 3) + '0';
++        decimal >>= 2;
++    }
++    ternary[index] = '\0';
++}
++
++
++#include <stdio.h>
++
++#define MAX_TERNARY_LENGTH 35
++
++int main() {
++    unsigned int counter = 0;
++    int ternary[MAX_TERNARY_LENGTH];
++    unsigned int max_int = (1ULL << 32) -1;
++    for (unsigned int i = 0; i < max_int; i++) {
++        int index = 0;
++        if (i % 100000000 == 0) {
++            printf("i: %u\n", i);
++        }
++        unsigned int decimal = i;
++        while (decimal > 0) {
++            ternary[index++] = decimal & 3;
++            decimal >>= 2;
++        }
++
++        int count = 1;
++        int prev = ternary[index - 1];
++
++        for (int j = index - 2; j >= 0; j--) {
++            if (ternary[j] == prev) {
++                count++;
++                if (count >= 3) {
++                    counter++;
++                    break;
++                }
++            } else {
++                count = 1;
++                prev = ternary[j];
++            }
++        }
++    }
++
++    printf("Counter: %u\n", counter);
++    printf("Percentage: %f\n", (double)counter / (1ULL << 32));
++    return 0;
++}
+diff --git a/droplet.py b/droplet.py
+new file mode 100644
+index 0000000..02835de
+--- /dev/null
++++ b/droplet.py
+@@ -0,0 +1,110 @@
++"""
++Copyright (C) 2016 Yaniv Erlich
++License: GPLv3-or-later. See COPYING file for details.
++"""
++from utils import int_to_four, four_to_dna, four_to_int
++import random
++import struct
++import numpy as np
++
++def xor_numpy(p1, p2):
++    if (isinstance(p2, np.ndarray) and isinstance(p1, np.ndarray)) and (
++            (p1.dtype == np.uint8 and p2.dtype == np.uint8)
++            or (p1.dtype == np.bool and p2.dtype == np.bool)
++    ):
++        n_p1 = p1
++        n_p2 = p2
++    else:
++        n_p1 = np.frombuffer(p1, dtype="uint8")
++        n_p2 = np.frombuffer(p2, dtype="uint8")
++    return np.bitwise_xor(n_p1, n_p2)
++def xor_with_seed(bin_data, seed):
++    """ XOR the data with a random bytestring of the same length, the seed is the packet id """
++    rng = np.random.default_rng(seed)
++    rng
++    return xor_numpy(np.frombuffer(rng.bytes(len(bin_data)), dtype=np.uint8),
++                     np.frombuffer(bin_data, dtype=np.uint8)).tobytes()
++
++def interleave_spacing(input_str: str, spacing: int, spacing_length: int) -> bytes:
++    # print(f"O input_str: {input_str}")
++    if spacing <= 0 or spacing_length <= 0:
++        return input_str
++
++    left : str = input_str[:spacing_length]
++    right: str = input_str[spacing_length:]
++
++    interleaved_str: str = ''
++    i = 0
++    j = 0
++
++    while i < len(left) and j < len(right):
++        if j % spacing == 0:
++            interleaved_str += left[i:i+1]
++            i += 1
++        interleaved_str += right[j:j+1]
++        j += 1
++
++    # If there are remaining characters in left or right
++    interleaved_str += left[i:] + right[j:]
++    #print(f"N input_str: {interleaved_str}")
++    return interleaved_str
++
++
++class Droplet:
++    def __init__(self, data, seed, num_chunks = None, rs = 0, rs_obj = None, degree = None, spacing = 4, payload_xor=True):
++        #num_chunks is a list of the orignal packets numbers used to xor 
++        #rs is the number of Reed Solomon symbols to add to the message
++
++        self.data = data
++        self.seed = seed
++        self.num_chunks = set(num_chunks)
++        self.rs = rs
++        self.rs_obj = rs_obj
++        self.degree = degree
++        self.spacing = spacing
++        self.payload_xor = payload_xor
++
++        self.DNA = None
++
++    def chunkNums(self):
++        return self.num_chunks
++
++    def toDNA(self, flag = None):
++        #this function wraps the seed, data payload, and Reed Solomon.
++
++        if self.DNA is not None:
++            return self.DNA
++
++        self.DNA = int_to_four(self._package())
++        return self.DNA
++
++    def to_human_readable_DNA(self):
++        #converts the DNA into a human readable [A,C,G,T
++        return four_to_dna(self.toDNA())
++
++    def _package(self):
++        #this function converts the seed to a list of 4bytes HARD CODED!!!
++        #adds the seed to the data (list of integers)
++        #computes a reed solomon on the seed+data.
++        #returns everything.
++
++        seed_ord = [c for c in struct.pack("!I", self.seed)]
++        #converting the seed into exectly four bytes.
++        # TODO: space the seed out / XOR the seed:
++        # XOR the seed using fixed mask:
++        # print(f"O seed_ord: {bytes(seed_ord)}")
++        # seed_ord = bytes([x^y for x,y in zip(bytes(seed_ord), struct.pack("I", 0b11101010001000111011101000100011))])
++        seed_ord = bytes(seed_ord)
++        # print(f"N seed_ord: {seed_ord}")
++        # dseed_ord = bytes([x ^ y for x, y in zip(bytes(seed_ord), struct.pack("I", 0b11101010001000111011101000100011))])
++        # print(f"D seed_ord: {dseed_ord}")
++        if self.payload_xor:
++            message = seed_ord + xor_with_seed(bytes(self.data), self.seed)
++        else:
++            message = seed_ord + bytes(self.data)
++        if self.spacing > 0:
++            message = four_to_int(interleave_spacing(int_to_four(message), self.spacing, len(int_to_four(seed_ord))))
++        if self.rs > 0:
++            message = self.rs_obj.encode(message)  #adding RS symbols to the message
++
++        return message
+diff --git a/droplet.pyx b/droplet.pyx
+deleted file mode 100644
+index 78f9c82..0000000
+--- a/droplet.pyx
++++ /dev/null
+@@ -1,58 +0,0 @@
+-"""
+-Copyright (C) 2016 Yaniv Erlich
+-License: GPLv3-or-later. See COPYING file for details.
+-"""
+-from utils import int_to_four, four_to_dna
+-import random
+-import struct
+-import numpy as np
+-from sets import Set
+-
+-class Droplet:
+-    def __init__(self, data, seed, num_chunks = None, rs = 0, rs_obj = None, degree = None):
+-        #num_chunks is a list of the orignal packets numbers used to xor 
+-        #rs is the number of Reed Solomon symbols to add to the message
+-
+-        self.data = data
+-        self.seed = seed
+-        self.num_chunks = Set(num_chunks)
+-        self.rs = rs
+-        self.rs_obj = rs_obj
+-        self.degree = degree
+-
+-        self.DNA = None
+-
+-    def chunkNums(self):
+-        return self.num_chunks
+-
+-    def toDNA(self, flag = None):
+-        #this function wraps the seed, data payload, and Reed Solomon.
+-
+-        if self.DNA is not None:
+-            return self.DNA
+-        
+-        self.DNA = int_to_four(self._package())
+-        return self.DNA
+-
+-
+-    def to_human_readable_DNA(self):
+-        #converts the DNA into a human readable [A,C,G,T
+-        return four_to_dna(self.toDNA())
+-        
+-    def _package(self):
+-        #this function converts the seed to a list of 4bytes HARD CODED!!!
+-        #adds the seed to the data (list of integers)
+-        #computes a reed solomon on the seed+data.
+-        #returns everything.
+-
+-        seed_ord =  [ ord(c) for c in struct.pack("!I", self.seed) ]
+-            #converting the seed into exectly four bytes.
+-        message = seed_ord + self.data
+-        
+-        if self.rs > 0:
+-            message = self.rs_obj.encode(message) #adding RS symbols to the message
+-
+-        return message
+-        
+-
+-
+diff --git a/encode.py b/encode.py
+index 458e1ef..f5a3996 100644
+--- a/encode.py
++++ b/encode.py
+@@ -13,7 +13,6 @@ import logging
+ import Colorer
+ import os
+ import sys
+-from sets import Set
+ from lfsr import lfsr
+ import json
+ from tqdm import tqdm
+@@ -37,8 +36,8 @@ def read_args():
+     parser.add_argument("--alpha", help = "How many more fragments to generate on top of first k (example: 0.1 will generate 10 percent more fragments)", default = 0.07, type = float)
+     parser.add_argument("--no_fasta", help = "Print oligo without a fasta header", default = False, action='store_true')
+     parser.add_argument("--rand_numpy", help = "Uses numpy random generator. Faster but not compatible with older versions", default = False, action = 'store_true')
+-
+-
++    parser.add_argument("--spacing", help="Seed spacing to use during encoding", default=0, type = int)
++    parser.add_argument("--payload_xor", help = "XOR the payload using the seed", default = False, action = 'store_true')
+     args = parser.parse_args()
+     args.orf= None
+ 
+@@ -64,7 +63,9 @@ def main():
+                     c_dist = args.c_dist,
+                     np = args.rand_numpy,
+                     alpha = args.alpha, 
+-                    stop = args.stop)
++                    stop = args.stop,
++                    spacing = args.spacing,
++                    payload_xor = args.payload_xor)
+ 
+     logging.info("Upper bounds on packets for decoding is %d (x%f)  with %f probability\n", int(json.loads(f.PRNG.debug())['K_prime']), 
+                                                                                            json.loads(f.PRNG.debug())['Z'],
+@@ -102,6 +103,7 @@ def main():
+     if (args.out != '-'):
+         pbar.close()
+     logging.info("Finished. Generated %d packets out of %d tries (%.3f)", f.good, f.tries, (f.good+0.0)/f.tries)
++    logging.info("Bad: %d", f.bad)
+ 
+     out.close()
+ main()
+diff --git a/fountain.pyx b/fountain.pyx
+index e44992f..4616843 100644
+--- a/fountain.pyx
++++ b/fountain.pyx
+@@ -4,9 +4,11 @@ License: GPLv3-or-later. See COPYING file for details.
+ """
+ from droplet import Droplet
+ from math import ceil
++
++from robustSolition import PRNG
+ from utils import screen_repeat
+ from lfsr import lfsr, lfsr32p, lfsr32s
+-from robust_solition import PRNG
++#from robust_solition import PRNG
+ from reedsolo import RSCodec
+ import operator
+ import sys
+@@ -15,18 +17,20 @@ import random
+ 
+ class DNAFountain:
+ 
+-    def __init__(self, 
+-                file_in, 
+-                file_size, 
++    def __init__(self,
++                file_in,
++                file_size,
+                 chunk_size,
+-                alpha, 
++                alpha,
+                 stop = None,
+-                rs = 0, 
+-                c_dist = 0.1, 
+-                delta = 0.5, 
++                rs = 0,
++                c_dist = 0.1,
++                delta = 0.5,
+                 np = False,
+                 max_homopolymer = 3,
+-                gc = 0.05
++                gc = 0.05,
++                spacing = 4,
++                payload_xor = True
+                 ):
+ 
+         #alpha is the redundency level
+@@ -46,12 +50,14 @@ class DNAFountain:
+         self.file_size = file_size
+         self.alpha = alpha
+         self.stop = stop
++        self.spacing = spacing
++        self.payload_xor = payload_xor
+         self.final = self.calc_stop()
+ 
+         #things related to random mnumber generator
+         self.lfsr = lfsr(lfsr32s(), lfsr32p()) #starting an lfsr with a certain state and a polynomial for 32bits.
+-        self.lfsr_l = len(    '{0:b}'.format( lfsr32p() )   ) - 1 #calculate the length of lsfr in bits 
+-        self.seed = self.lfsr.next()
++        self.lfsr_l = len(    '{0:b}'.format( lfsr32p() )   ) - 1 #calculate the length of lsfr in bits
++        self.seed = next(self.lfsr)
+ 
+ 
+         self.PRNG = PRNG(K = self.num_chunks, delta = delta, c = c_dist, np = np) #creating the solition distribution object
+@@ -66,6 +72,7 @@ class DNAFountain:
+         self.max_homopolymer = max_homopolymer
+         self.tries = 0 #number of times we tried to create a droplet
+         self.good = 0 #droplets that were screened successfully.
++        self.bad = 0 #droplets that were screened unsuccessfully.
+         self.oligo_l = self.calc_oligo_length()
+ 
+ 
+@@ -81,7 +88,7 @@ class DNAFountain:
+ 
+         if self.stop is not None:
+             return self.stop
+-        
++
+         stop = int(self.num_chunks*(1+self.alpha))+1
+         return stop
+ 
+@@ -95,16 +102,18 @@ class DNAFountain:
+             if data is None: #first round. data payload is empty.
+                 data = self.chunk(num) #just copy the segment to the payload.
+             else: #more rounds. Starting xoring the new segments with the payload.
+-                data = map(operator.xor, data, self.chunk(num))
++                data = [x^y for x,y in zip(data, self.chunk(num))]
+ 
+         self.tries +=  1 #upadte counter.
+ 
+         #we have a droplet:
+-        return Droplet(data = data, 
+-                       seed = self.seed, 
++        return Droplet(data = data,
++                       seed = self.seed,
+                        rs = self.rs,
+                        rs_obj = self.rs_obj,
+                        num_chunks = num_chunks,
++                       spacing = self.spacing,
++                       payload_xor = self.payload_xor,
+                        degree = d)
+ 
+     def chunk(self, num):
+@@ -113,7 +122,7 @@ class DNAFountain:
+ 
+     def updateSeed(self):
+         #This function creates a fresh seed for the droplet and primes the solition inverse cdf sampler
+-        self.seed = self.lfsr.next() #deploy one round of lfsr, and read the register.
++        self.seed = next(self.lfsr) #deploy one round of lfsr, and read the register.
+         self.PRNG.set_seed(self.seed) #update the seed with the register
+ 
+     def rand_chunk_nums(self):
+@@ -130,6 +139,7 @@ class DNAFountain:
+         #if self.screen_obj.screen(droplet.toDNA(), self.oligo_l):
+             self.good += 1
+             return 1
++        self.bad += 1
+         return 0
+ 
+ 
+diff --git a/glass.pyx b/glass.pyx
+index 6b861b1..e429732 100644
+--- a/glass.pyx
++++ b/glass.pyx
+@@ -1,3 +1,5 @@
++from Cython import long
++
+ from utils import *
+ from droplet import Droplet
+ from reedsolo import RSCodec
+@@ -89,6 +91,7 @@ class Glass:
+             data_corrected = data
+ 
+         #seed, data = split_header(data, self.header_size)
++        # TODO: revert seed-spacing here!
+         seed_array = data_corrected[:self.header_size]
+         seed = sum([   long(x)*256**i        for i, x in enumerate(seed_array[::-1])   ])
+         payload = data_corrected[self.header_size:]
+@@ -103,7 +106,7 @@ class Glass:
+             #create droplet from DNA
+             self.PRNG.set_seed(seed)
+             blockseed, d, ix_samples = self.PRNG.get_src_blocks_wrap()
+-            d = Droplet(payload, seed, ix_samples)
++            d = Droplet(payload, seed, ix_samples, spacing=0)
+             
+             #more error detection (filter DNA that does not make sense)
+             if not screen_repeat(d, self.max_homopolymer, self.gc):
+@@ -170,16 +173,16 @@ class Glass:
+         try:
+             truth_data = self.truth[chunk_num]
+         except:
+-            print "Error. chunk:", chunk_num, " does not exist."
++            print("Error. chunk:", chunk_num, " does not exist.")
+             quit(1)
+ 
+         
+         if not droplet.data == truth_data:
+             #error
+-            print "Decoding error in ", chunk_num, ".\nInput is:", truth_data,"\nOutput is:", droplet.data,"\nDNA:", droplet.to_human_readable_DNA(flag_exDNA = False)
++            print("Decoding error in ", chunk_num, ".\nInput is:", truth_data,"\nOutput is:", droplet.data,"\nDNA:", droplet.to_human_readable_DNA(flag_exDNA = False))
+             quit(1)
+         else:
+-            #print chunk_num, " is OK. ", self.chunksDone, " are done"
++            #print(chunk_num, " is OK. ", self.chunksDone, " are done")
+             return 1
+ 
+     def add_seed(self, seed):
+diff --git a/lfsr.py b/lfsr.pyx
+similarity index 97%
+rename from lfsr.py
+rename to lfsr.pyx
+index 78583e0..93ca302 100644
+--- a/lfsr.py
++++ b/lfsr.pyx
+@@ -30,4 +30,4 @@ def lfsr32s():
+ def test():
+     #run the test to see a stream of seed by the polynomial
+     for pattern in lfsr(0b001, 0b100000000000000000000000011000101):
+-        print pattern
++        print(pattern)
+diff --git a/logo_mosla_bw.png b/logo_mosla_bw.png
+new file mode 100644
+index 0000000..45faded
+Binary files /dev/null and b/logo_mosla_bw.png differ
+diff --git a/preprocessing.py b/preprocessing.py
+index 60b52ea..dc81b8b 100644
+--- a/preprocessing.py
++++ b/preprocessing.py
+@@ -2,13 +2,18 @@
+ Copyright (C) 2016 Yaniv Erlich
+ License: GPLv3-or-later. See COPYING file for details.
+ """
++try:
++    xrange
++except NameError:
++    xrange = range
+ 
++import hashlib
+ import logging
+ import Colorer
+ import os
+ import sys
+ import numpy as np
+-import md5
++#import md5
+ 
+ logging.basicConfig(level=logging.DEBUG)
+ 
+@@ -30,23 +35,23 @@ def read_file(file_in, size):
+     pad = -len(data) % chunk_size
+     if pad > 0:
+         logging.debug("Padded the file with %d zero to have a round number of blocks of data", pad)    
+-    data += "\0" * pad #zero padding.
++    data += b"\0" * pad #zero padding.
+     size = len(data)
+-    logging.info("File MD5 is %s", md5.new(data).hexdigest())
++    logging.info("File MD5 is %s", hashlib.md5(data).hexdigest())
+ 
+ 
+-    data_array = [None] * (size/chunk_size) 
++    data_array = [None] * int(size/chunk_size)
+ 
+     logging.info("There are %d input segments", size/chunk_size)    
+ 
+-    for num in xrange(size/chunk_size):
++    for num in xrange(int(size/chunk_size)):
+         start = chunk_size * num
+         end = chunk_size * (num+1)
+         chunk_binary = data[start:end]
+ 
+         chunk_ords = [None] * chunk_size
+         for pos in xrange(chunk_size):
+-            chunk_ords[pos] = ord(chunk_binary[pos])
++            chunk_ords[pos] = chunk_binary[pos]
+ 
+         data_array[num] = chunk_ords
+     return (data_array, len(data)) 
+diff --git a/robust_solition.pyx b/robustSolition.pyx
+similarity index 99%
+rename from robust_solition.pyx
+rename to robustSolition.pyx
+index b09b1c1..3eb7dfd 100644
+--- a/robust_solition.pyx
++++ b/robustSolition.pyx
+@@ -24,7 +24,10 @@ from numpy.random import RandomState
+ import scipy.interpolate as inter
+ import math
+ 
+-
++try:
++    xrange
++except NameError:
++    xrange = range
+ 
+ #helper functions to calculate the soltion distribution
+ def gen_tau(S, K, delta):
+diff --git a/sleeping_beauty b/sleeping_beauty
+new file mode 100644
+index 0000000..76384ee
+--- /dev/null
++++ b/sleeping_beauty
+@@ -0,0 +1,40 @@
++Once upon a time there lived a king and queen who were very unhappy because they had no children. But at last a little daughter was born, and their sorrow was turned to joy. All the bells in the land were rung to tell the glad tidings.
++The king gave a christening feast so grand that the like of it had never been known. He invited all the fairies he could find in the kingdom—there were seven of them—to come to the christening as godmothers. He hoped that each would give the princess a good gift.
++When the christening was over, the feast came. Before each of the fairies was placed a plate with a spoon, a knife, and a fork—all pure gold. But alas! As the fairies were about to seat themselves at the table, there came into the hall a very old fairy who had not been invited. She had left the kingdom fifty years before and had not been seen or heard of until this day.
++The king at once ordered that a plate should be brought for her, but he could not furnish a gold one such as the others had. This made the old fairy angry, and she sat there muttering to herself.
++A young fairy who sat near overheard her angry threats. This good godmother, fearing the old fairy might give the child an unlucky gift, hid herself behind a curtain. She did this because she wished to speak last and perhaps be able to change the old fairy’s gift.
++At the end of the feast, the youngest fairy stepped forward and said, “The princess shall be the most beautiful woman in the world.”
++The second said,
++“She shall have a temper as sweet as an angel.”
++The third said,
++“She shall have a wonderful grace in all she does or says.”
++The fourth said,
++“She shall sing like a nightingale.”
++The fifth said,
++“She shall dance like a flower in the wind.”
++The sixth said,
++“She shall play such music as was never heard on earth.”
++Then the old fairy’s turn came. Shaking her head spitefully, she said,
++“When the princess is seventeen years old, she shall prick her finger with a spindle, and-she-shall-die!”
++At this all the guests trembled, and many of them began to weep. The king and queen wept loudest of all.
++Just then the wise young fairy came from behind the curtain and said: “Do not grieve, O King and Queen. Your daughter shall not die. I cannot undo what my elder sister has done; the princess shall indeed prick her finger with the spindle, but she shall not die. She shall fall into sleep that will last a hundred years. At the end of that time, a king’s son will find her and awaken her.”
++Immediately all the fairies vanished.
++
++The king, hoping to save his child even from this misfortune, commanded that all spindles should be burned. This was done, but it was all in vain.
++One day when the princess was seventeen years of age, the king and queen left her alone in the castle. She wandered about the palace and at last came to a little room in the top of a tower. There an old woman—so old and deaf that she had never heard of the king’s command—sat spinning.
++“What are you doing, good old woman?” asked the princess.
++“I am spinning, my pretty child.”
++“Ah,” said the princess. “How do you do it? Let me see if I can spin also.”
++She had just taken the spindle in her hand when, in some way, it pricked her finger. The princess dropped down on the floor. The old woman called for help, and people came from all sides, but nothing could be done.
++When the good young fairy heard the news, she came quickly to the castle. She knew that the princess must sleep a hundred years and would be frightened if she found herself alone when she awoke. So the fairy touched with her magic wand all in the palace except the king and the queen. Ladies, gentlemen, pages, waiting maids, footmen, grooms in the stable, and even the horses—she touched them all. They all went to sleep just where they were when the wand touched them. Some of the gentlemen were bowing to the ladies, the ladies were embroidering, the grooms stood currying their horses, and the cook was slapping the kitchen boy.
++The king and queen departed from the castle, giving orders that no one was to go near it. This command, however, was not needed. In a little while there sprang around the castle a wood so thick that neither man nor beast could pass through.
++
++A great many changes take place in a hundred years. The king had no other child, and when he died, his throne passed to another royal family. Even the story of the sleeping princess was almost forgotten.
++One day the son of the king who was then reigning was out hunting, and he saw towers rising above a thick wood. He asked what they were, but no one could answer him.
++At last an old peasant was found who said, “Your highness, fifty years ago my father told me that there is a castle in the woods where a princess sleeps—the most beautiful princess that ever lived. It was said that she must sleep there a hundred years, when she would be awakened by a king’s son.”
++At this the young prince determined to find out the truth for himself. He leaped from his horse and began to force his way through the wood. To his astonishment, the stiff branches gave way, and then closed again, allowing none of his companions to follow.
++A beautiful palace rose before him. In the courtyard the prince saw horses and men who looked as if they were dead. But he was not afraid and boldly entered the palace. There were guards motionless as stone, gentlemen and ladies, pages and footmen, some standing, some sitting, but all like statues.
++At last the prince came to a chamber of gold, where he saw upon a bed the fairest sight one ever beheld—a princess of about seventeen years who looked as if she had just fallen asleep. Trembling, the prince knelt beside her, and awakened her with a kiss. And now the enchantment was broken.
++The princess looked at him with wondering eyes and said: “Is it you, my prince? I have waited for you long.”
++So happy were the two that they talked hour after hour. In the meantime all in the palace awaked and each began to do what he was doing when he fell asleep. The gentlemen went on bowing to the ladies. The ladies went on with their embroidery. The grooms went on currying their horses, the cook went on slapping the kitchen boy, and the servants began to serve the supper. Then the chief lady in waiting, who was ready to die of hunger, told the princess aloud that supper was ready.
++The prince gave the princess his hand, and they all went into the great hall for supper. That very evening the prince and princess were married. The next day the prince took his bride to his father’s palace, and there they lived happily ever afterward.
+\ No newline at end of file
+diff --git a/utils.pyx b/utils.pyx
+index a9cecd8..fbd2d54 100644
+--- a/utils.pyx
++++ b/utils.pyx
+@@ -2,7 +2,12 @@
+ Copyright (C) 2016 Yaniv Erlich
+ License: GPLv3-or-later. See COPYING file for details.
+ """
+-from string import maketrans   # Required to call maketrans function.
++try:
++    xrange
++except NameError:
++    xrange = range
++
++#from string import maketrans   # Required to call maketrans function.
+ import struct
+ import random
+ import os
+@@ -12,8 +17,8 @@ import argparse
+ intab = "0123"
+ outtab = "ACGT"
+ 
+-trantab = maketrans(intab, outtab)
+-revtab = maketrans(outtab, intab)
++trantab = str.maketrans(intab, outtab)
++revtab = str.maketrans(outtab, intab)
+ 
+ 
+ def charN(str, N):
+@@ -77,6 +82,11 @@ def int_to_dna(a):
+     s = ''.join(str(int(bin_data[t:t+2],2)) for t in xrange(0, len(bin_data),2)) #convert binary array to a string of 0,1,2,3
+     return s.translate(trantab)
+ 
++def four_to_int(s):
++    # s is a string of characters 0, 1, 2, and 3
++    # returns an array of integers between 0-255
++    bin_data = ''.join('{0:02b}'.format(int(char)) for char in s)  # convert string of 0,1,2,3 to binary string
++    return [int(bin_data[i:i+8], 2) for i in range(0, len(bin_data), 8)]  # convert binary string to array of integers
+ 
+ def int_to_four(a):
+     #a is an array of integers between 0-255.
