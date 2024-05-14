@@ -219,7 +219,7 @@ def compute_distribution_fitness(raptor_lst, file_lst, runs=25, chunksize=50, id
 
 def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, id_spacing=0, mask_id=True,
            use_payload_xor=True, insert_header=False, seed_struct_str="H", return_packet_error_vals=False,
-           store_packets=True):
+           store_packets=True, error_correction=None, packets_to_create=None):
     """
     Encodes the file into all possible packets, calculate error probability and  the pseudo decoder was able to decode it 'repeats' times with the given chunk size
     and the distribution list.
@@ -236,8 +236,11 @@ def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, 
     :param seed_struct_str: Struct string to use for the seed. Default: "H" (unsigned short).
     :param return_packet_error_vals: If True, returns the error values for every packet. Default: False.
     :param store_packets: If True, stores the full packets. Default: True.
+    :param error_correction: Error correction method to use (valid: nocode, reed_solomon_encode, ...). Default: nocode.
     :return:
     """
+    if error_correction is None:
+        error_correction = nocode
     degree_dict = {}
     overhead_lst = []
     unrecovered_lst = []
@@ -248,14 +251,15 @@ def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, 
     if rules is None:
         rules = FastDNARules()
     encoder = RU10Encoder(file, number_of_chunks, distribution, insert_header=insert_header, rules=rules,
-                          error_correction=nocode, id_len_format=seed_struct_str, number_of_chunks_len_format="B",
+                          error_correction=error_correction, id_len_format=seed_struct_str, number_of_chunks_len_format="B",
                           save_number_of_chunks_in_packet=False, mode_1_bmp=False, xor_by_seed=use_payload_xor,
                           mask_id=mask_id, id_spacing=id_spacing)
     encoder.prepare()
     encoder.random_state = np.random.RandomState()
 
     # create all possible packets:
-    packets_to_create = int(math.pow(2, 8 * struct.calcsize(encoder.id_len_format)))
+    if packets_to_create is None:
+        packets_to_create = int(math.pow(2, 8 * struct.calcsize(encoder.id_len_format)))
     packets = []
     packet_error_vals = []
     for i in range(packets_to_create):

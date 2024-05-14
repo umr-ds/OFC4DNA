@@ -407,6 +407,7 @@ def create_new_param_compare_csv():
 
 
 if __name__ == "__main__":
+    create_new_param_compare_csv()
     plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
 
     compare_dists(files=["logo_mosla_bw.bmp", "Dorn", "aes_Dorn"], chunksize=40,
