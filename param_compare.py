@@ -15,7 +15,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 import Distribution
-from Helper import encode, calculate_entropy, norm_list, to_dist_list, raptor_dist
+from Helper import encode, calculate_entropy, norm_list, to_dist_list, raptor_dist, encode_for_spacing
 from NOREC4DNA.norec4dna.distributions.RaptorDistribution import RaptorDistribution
 from NOREC4DNA.norec4dna.rules.FastDNARules import FastDNARules
 
@@ -161,21 +161,31 @@ def plot_err_nums(label_file_names):
 
 def get_packets(seed_struct_str="H"):
     packets = []
-    for i in [True, False]:
-        packets.append(encode(file="logo_mosla_bw.bmp", chunk_size=40, dist=dists[0], rules=rules,
-                              return_packets=True, repeats=repeats, id_spacing=0,
-                              mask_id=False, use_payload_xor=i,
-                              seed_struct_str=seed_struct_str, return_packet_error_vals=False,
-                              store_packets=True))
+    # for i in [True, False]:
+    i = False
+    for spacing in range(8):
+        # packets.append(encode(file="sleeping_beauty", chunk_size=40, dist=dists[0], rules=rules,
+        #                      return_packets=True, repeats=repeats, id_spacing=spacing,
+        #                      mask_id=False, use_payload_xor=i,
+        #                      seed_struct_str=seed_struct_str, return_packet_error_vals=True,
+        #                      store_packets=False)[0])
+        packets.append(encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=spacing,
+                                          mask_id=False, use_payload_xor=i, seed_struct_str=seed_struct_str))
     # print([(packets[0][i], packets[4][i]) for i in range(len(packets[0])) if
     #       packets[0][i].error_prob > packets[4][i].error_prob])
     data = [(len([(packets[0][i], packets[k][i]) for i in range(len(packets[0])) if
-                  packets[0][i].error_prob > packets[k][i].error_prob]),
+                  packets[0][i] > packets[k][i] and packets[0][i] >= 1.0]),
+
              len([(packets[0][i], packets[k][i]) for i in range(len(packets[0])) if
-                  packets[0][i].error_prob < packets[k][i].error_prob])) for k in range(len(packets))]
+                  packets[0][i] < packets[k][i] and packets[0][i] < 1.0])) for k in
+            range(len(packets))]
     """
+    # data for 2 byte seed (sleeping_beauty) (non invalid!):
+    -- ignore: data = [(0, 0), (1118, 1043), (1606, 1263), (1982, 1399), (2280, 1499), (2341, 1589), (2407, 1581), (2559, 1794), (2619, 1881)]
+    # both bounds:
+    data = [(0, 0), (1118, 945),  (1606, 1153), (1982, 1262), (2280, 1353), (2341, 1460), (2407, 1434), (2559, 1482), (2619, 1480)]
     # data for 2 byte seed:
-    data = [(1526, 1478), (2050, 1972), (2533, 2531), (3077, 3023), (3188, 3038), (3239, 3014), (3301, 3159), (3289, 3212)]
+    -- ignore: data = [(1526, 1478), (2050, 1972), (2533, 2531), (3077, 3023), (3188, 3038), (3239, 3014), (3301, 3159), (3289, 3212)]
     # data for 4 byte seed:
     data = [(319943, 79185), (363581, 67776), (393642, 69167), (418473, 70606), (414770, 76321), (415726, 77589),
             (416529, 76359), (416711, 76865)]
@@ -205,15 +215,15 @@ def get_packets(seed_struct_str="H"):
     plt.xticks(x_values, x_values)  # Set x-tick labels as the indices
 
     # Add a legend
-    plt.legend(loc="right")
+    plt.legend(loc="lower right")
     plt.autoscale()
-    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else '1310720'}.svg", format="svg",
+    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}.svg", format="svg",
                 dpi=1200)
-    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else '1310720'}.pdf",
+    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}.pdf",
                 bbox_inches="tight")
     # Show the plot
     plt.show()
-    # """
+    # "" "
 
 
 def compare_variants_with_packets():
@@ -445,5 +455,4 @@ if __name__ == "__main__":
 
     """
     # Code to generate a new "param_compare" csv file (configure at the top of the file!):
-    create_new_param_compare_csv
     """

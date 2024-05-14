@@ -1,10 +1,13 @@
 import bisect
 import math
+import multiprocessing
 import random
 import struct
 import typing
 
 import csv
+from itertools import chain
+
 import numpy as np
 import pandas as pd
 import Distribution
@@ -251,7 +254,8 @@ def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, 
     if rules is None:
         rules = FastDNARules()
     encoder = RU10Encoder(file, number_of_chunks, distribution, insert_header=insert_header, rules=rules,
-                          error_correction=error_correction, id_len_format=seed_struct_str, number_of_chunks_len_format="B",
+                          error_correction=error_correction, id_len_format=seed_struct_str,
+                          number_of_chunks_len_format="B",
                           save_number_of_chunks_in_packet=False, mode_1_bmp=False, xor_by_seed=use_payload_xor,
                           mask_id=mask_id, id_spacing=id_spacing)
     encoder.prepare()
@@ -267,17 +271,25 @@ def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, 
             print("Creating packet %d / %d" % (i, packets_to_create))
         created_packet = encoder.create_new_packet(seed=i)
         should_drop_packet(rules, created_packet)
-        if created_packet.get_degree() not in degree_dict:
-            degree_dict[created_packet.get_degree()] = list()
-        degree_dict[created_packet.get_degree()].append(min(created_packet.error_prob, 1.0))
+        if not (return_packets or return_packet_error_vals):
+            if created_packet.get_degree() not in degree_dict:
+                degree_dict[created_packet.get_degree()] = list()
+            degree_dict[created_packet.get_degree()].append(min(created_packet.error_prob, 1.0))
         if store_packets:
             packets.append(created_packet)
-        packet_error_vals.append(created_packet.error_prob)
+        if return_packet_error_vals:
+            packet_error_vals.append(created_packet.error_prob)
         # if len([x for x in packet_error_vals if x < 1.0]) > 5:
         #    break
     # if store_packets:
     #    packets = sorted(packets)
-
+    if return_packet_error_vals:
+        num_chunks = encoder.number_of_chunks
+        del encoder, degree_dict, packets
+        return packet_error_vals, num_chunks
+    if return_packets:
+        del encoder
+        return packets
     # insert into pseudo-decoder (ordered by error-probability)
     pseudo_decoder = create_pseudo_decoder(encoder.number_of_chunks, distribution)
     needed_packets = 0
@@ -295,17 +307,62 @@ def encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, 
                 overhead_lst.append(overhead)
                 needed_packets = 0
                 pseudo_decoder = create_pseudo_decoder(encoder.number_of_chunks, distribution)
-                break
-    if return_packet_error_vals:
-        return packet_error_vals, encoder.number_of_chunks
+            break
     number_of_chunks = encoder.number_of_chunks
     del encoder, pseudo_decoder
-    if return_packets:
-        return packets
+
     unrecovered_avg = sum(unrecovered_lst) / len(unrecovered_lst)
     overhead_avg = sum(overhead_lst) / len(overhead_lst)
     return (overhead_avg, degree_dict, len(set([x.get_data().tobytes() for x in packets])), unrecovered_avg), (
-    packet_error_vals, number_of_chunks)
+        packet_error_vals, number_of_chunks)
+
+
+def worker(args):
+    start_seed, end_seed, file, chunk_size, dist, id_spacing, mask_id, use_payload_xor, insert_header, seed_struct_str = args
+    error_correction = nocode
+    number_of_chunks = Encoder.get_number_of_chunks_for_file_with_chunk_size(file, chunk_size, insert_header=False)
+    distribution = RaptorDistribution(number_of_chunks)
+    distribution.f = dist
+    distribution.d = [x for x in range(0, 41)]
+    rules = FastDNARules()
+    encoder = RU10Encoder(file, number_of_chunks, distribution, insert_header=insert_header, rules=rules,
+                          error_correction=error_correction, id_len_format=seed_struct_str,
+                          number_of_chunks_len_format="B",
+                          save_number_of_chunks_in_packet=False, mode_1_bmp=False, xor_by_seed=use_payload_xor,
+                          mask_id=mask_id, id_spacing=id_spacing)
+    encoder.prepare()
+    encoder.random_state = np.random.RandomState()
+    packet_error_vals = []
+    for i in np.arange(start_seed, end_seed):
+        # if i % 100000 == 0:
+        #    print(f"Creating packet {i} in ({start_seed}-{end_seed}")
+        created_packet = encoder.create_new_packet(seed=i)
+        should_drop_packet(rules, created_packet)
+        packet_error_vals.append(created_packet.error_prob)
+    del encoder, rules
+    return packet_error_vals
+
+
+def encode_for_spacing(file, chunk_size, dist, id_spacing=0, mask_id=True,
+                       use_payload_xor=True, insert_header=False, seed_struct_str="H"):
+    # create all possible packets:
+    total_packets_to_create = int(math.pow(2, 8 * struct.calcsize(seed_struct_str)))
+    # use multiprocessing pool to split the work between all cores:
+    # set number of workers using the number of cores:
+    num_worker = multiprocessing.cpu_count() - 5
+    # calculate the number of packets to create per worker using total_packets_to_create and n as the number of workers:
+    range_per_worker = total_packets_to_create // num_worker
+    with multiprocessing.Pool(num_worker) as p:
+        res = p.map(worker, [
+            (x, min(x + range_per_worker, total_packets_to_create), file, chunk_size, dist, id_spacing, mask_id,
+             use_payload_xor, insert_header, seed_struct_str) for x in
+            range(0, total_packets_to_create, range_per_worker)])
+        # res = [
+        #    worker((x, min(x + range_per_worker, total_packets_to_create), file, chunk_size, dist, id_spacing, mask_id,
+        #            use_payload_xor, insert_header, seed_struct_str)) for x in
+        #    range(0, total_packets_to_create, range_per_worker)]
+    res = list(chain.from_iterable(res))
+    return res
 
 
 def create_pseudo_decoder(number_of_chunks, distribution):
