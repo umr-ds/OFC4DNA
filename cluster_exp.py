@@ -1,8 +1,14 @@
+import glob
+import json
+import multiprocessing
 import os
 import typing
 from math import ceil
 
 from NOREC4DNA.optimizer.optimization_helper import diff_list_to_list, scale_to
+import RNA
+
+from compare_dna_fountain import load_fasta
 
 bmp_low_entropy_evo_dist = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.004971830584445606, 0.021156042715781434, 0.0,
                             0.0, 0.046598859494963854, 0.04050492331421386, 0.0, 0.04809096147307328, 0.0, 0.0,
@@ -76,8 +82,6 @@ PACKET_LEN_FORMAT = "I"
 DEFAULT_CHUNK_SIZE = 40
 upper_bound = 1.0
 error_correction = get_error_correction_encode("reedsolomon", 2)
-raptor_dist_func = norm_list(to_dist_list(raptor_dist))
-print(raptor_dist_func)
 mask_id = False
 overhead = 1
 
@@ -113,6 +117,36 @@ def save_packets_fasta(out_file, packets, seed_is_rowname=True):
             i += 1
     print(f"Saved result at: {out_file}")
 
+
+def process_file(file, temperature):
+    RNA.cvar.temperature = temperature
+    print(f"Processing {file}")
+    fasta = load_fasta(file)
+    tmp = []
+    for title, seq in fasta.items():
+        rna = RNA.fold_compound(seq)
+        pf = rna.pf()[1]
+        tmp.append(pf)
+        #print("PF: ", pf)
+    return (file, tmp)
+
+def eval_max_free_sec_struct(folder, temperature=37):
+    files = glob.glob(folder + "/Dorn*_payloadxor_seedspacing4.fasta")
+    files.append("clusts/Dorn.zip_raptor_dist.fasta")
+    res = {}
+    cores = multiprocessing.cpu_count() - 1
+
+    for file in files:
+        with multiprocessing.Pool(cores) as pool:
+            res[file] = pool.starmap(process_file, [(file, temperature) for file in files])
+    # dump as json:
+    with open(folder + "/mfe.json", "w") as f:
+        json.dump(res, f)
+    return res
+
+
+eval_max_free_sec_struct("clusts")
+exit(0)
 
 for file in ["Dorn.zip", "logo_mosla_bw.bmp"]:  # ,
     packets = mesa_encode(file, raptor_dist_func, False, 0)

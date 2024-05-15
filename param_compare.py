@@ -417,6 +417,7 @@ def create_new_param_compare_csv():
 
 
 if __name__ == "__main__":
+    """
     create_new_param_compare_csv()
     plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
 
@@ -436,9 +437,10 @@ if __name__ == "__main__":
     plot_max_possible_unique_packets_per_deg(50000, 4)
 
     parse_all_files()
-
+    """
     get_packets()
-
+    get_packets("I")
+    """
     # depending on the file content, some plots may fail, this is expected and should not be a problem
     try:
         create_graphs("eval/param_compare/param_compare_2023-09-07_15-58-41.csv")  # "param_compare_2023-08-17_10-31-15.csv")
@@ -453,6 +455,6 @@ if __name__ == "__main__":
     plot_err_nums([("plain IDs", "eval/err_nums/err_nums_Dorn_False_40_0_False_H_2023-09-07_10-35-44.csv"),
                    ("XOR shuffled IDs", "eval/err_nums/err_nums_Dorn_False_40_0_True_H_2023-09-07_10-35-05.csv")])
 
-    """
+    " ""
     # Code to generate a new "param_compare" csv file (configure at the top of the file!):
     """
