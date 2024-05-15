@@ -180,16 +180,12 @@ def get_packets(seed_struct_str="H"):
                   packets[0][i] < packets[k][i] and packets[0][i] < 1.0])) for k in
             range(len(packets))]
     """
-    # data for 2 byte seed (sleeping_beauty) (non invalid!):
-    -- ignore: data = [(0, 0), (1118, 1043), (1606, 1263), (1982, 1399), (2280, 1499), (2341, 1589), (2407, 1581), (2559, 1794), (2619, 1881)]
-    # both bounds:
-    data = [(0, 0), (1118, 945),  (1606, 1153), (1982, 1262), (2280, 1353), (2341, 1460), (2407, 1434), (2559, 1482), (2619, 1480)]
+    #matplotlib.rcParams["axes.formatter.limits"] = (-99, 99)
     # data for 2 byte seed:
-    -- ignore: data = [(1526, 1478), (2050, 1972), (2533, 2531), (3077, 3023), (3188, 3038), (3239, 3014), (3301, 3159), (3289, 3212)]
+    data = [(0, 0), (1118, 945), (1606, 1153), (1982, 1262), (2280, 1353), (2341, 1460), (2407, 1434), (2559, 1482)]
     # data for 4 byte seed:
-    data = [(319943, 79185), (363581, 67776), (393642, 69167), (418473, 70606), (414770, 76321), (415726, 77589),
-            (416529, 76359), (416711, 76865)]
-    """
+    data = [(0, 0), (153358975, 129382698), (208309123, 165962976), (289514196, 187265992), (338349469, 198733809), (351124970, 208058394), (367586972, 210544770), (376977775, 213091391)]
+    #"""
     print(data)
     # Extract the x values (index of tuples) starting from 1
     x_values = np.arange(1, len(data) + 1)
@@ -213,7 +209,8 @@ def get_packets(seed_struct_str="H"):
     # plt.yscale("log")
     plt.title(f"Additional (in)valid packets: {'2' if seed_struct_str == 'H' else '4'} byte seed")
     plt.xticks(x_values, x_values)  # Set x-tick labels as the indices
-
+    if seed_struct_str == "I":
+        plt.ylim((0, 376977775))
     # Add a legend
     plt.legend(loc="lower right")
     plt.autoscale()
@@ -438,7 +435,7 @@ if __name__ == "__main__":
 
     parse_all_files()
     """
-    get_packets()
+    # get_packets()
     get_packets("I")
     """
     # depending on the file content, some plots may fail, this is expected and should not be a problem
