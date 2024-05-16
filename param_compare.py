@@ -162,8 +162,12 @@ def plot_err_nums(label_file_names):
 def get_packets(seed_struct_str="H"):
     packets = []
     # for i in [True, False]:
-    i = False
-    for spacing in range(8):
+    i = True #False
+    packets.append(encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=0, mask_id=False, use_payload_xor=False, seed_struct_str=seed_struct_str))
+    # dump current packets to a file:
+    with open("tmp_packets.txt", "w") as f:
+        json.dump(packets, f)
+    for spacing in [2,4,6]: #range(8):
         # packets.append(encode(file="sleeping_beauty", chunk_size=40, dist=dists[0], rules=rules,
         #                      return_packets=True, repeats=repeats, id_spacing=spacing,
         #                      mask_id=False, use_payload_xor=i,
@@ -187,6 +191,8 @@ def get_packets(seed_struct_str="H"):
     data = [(0, 0), (153358975, 129382698), (208309123, 165962976), (289514196, 187265992), (338349469, 198733809), (351124970, 208058394), (367586972, 210544770), (376977775, 213091391)]
     #"""
     print(data)
+    with open("tmp_data.txt", "w") as f:
+        json.dump(data, f)
     # Extract the x values (index of tuples) starting from 1
     x_values = np.arange(1, len(data) + 1)
 
@@ -214,10 +220,13 @@ def get_packets(seed_struct_str="H"):
     # Add a legend
     plt.legend(loc="lower right")
     plt.autoscale()
-    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}.svg", format="svg",
-                dpi=1200)
-    plt.savefig(f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}.pdf",
-                bbox_inches="tight")
+    plt.savefig(
+        f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.svg",
+        format="svg",
+        dpi=1200)
+    plt.savefig(
+        f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.pdf",
+        bbox_inches="tight")
     # Show the plot
     plt.show()
     # "" "
@@ -332,7 +341,6 @@ def plot_max_possible_unique_packets_per_deg(n, seed_len=2):
     ax2.tick_params(axis="y", labelcolor="tab:red")
     # Combine legends from both axes
     # ax1.legend(loc="upper left")
-    # ax2.legend(loc="upper right")
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     lines = lines1 + lines2
@@ -435,8 +443,8 @@ if __name__ == "__main__":
 
     parse_all_files()
     """
-    # get_packets()
-    get_packets("I")
+    get_packets()
+    #get_packets("I")
     """
     # depending on the file content, some plots may fail, this is expected and should not be a problem
     try:

@@ -5,6 +5,7 @@ import os
 import typing
 from math import ceil
 
+from NOREC4DNA.find_minimum_packets import main
 from NOREC4DNA.optimizer.optimization_helper import diff_list_to_list, scale_to
 import RNA
 
@@ -94,7 +95,7 @@ def mesa_encode(file, dist_func, use_payload_xor, seed_spacing):
     # encode(file, chunk_size, dist, rules=None, return_packets=False, repeats=5, id_spacing=0, mask_id=True,
     #            use_payload_xor=True, insert_header=False, seed_struct_str="H", return_packet_error_vals=False,
     #            store_packets=True):
-    packets = encode(file, 40, dist_func, rules=FastDNARules(), return_packets=True, repeats=1,
+    packets = encode(file, 35, dist_func, rules=FastDNARules(), return_packets=True, repeats=0,
                      id_spacing=seed_spacing, mask_id=False, use_payload_xor=use_payload_xor, insert_header=False,
                      return_packet_error_vals=False, store_packets=True)
     return packets
@@ -127,12 +128,31 @@ def process_file(file, temperature):
         rna = RNA.fold_compound(seq)
         pf = rna.pf()[1]
         tmp.append(pf)
-        #print("PF: ", pf)
-    return (file, tmp)
+        # limit to 5000 to be comparable to the other results:
+        if len(tmp) >= 5000:
+            break
+        # print("PF: ", pf)
+    return {file: tmp}
 
-def eval_max_free_sec_struct(folder, temperature=37):
-    files = glob.glob(folder + "/Dorn*_payloadxor_seedspacing4.fasta")
-    files.append("clusts/Dorn.zip_raptor_dist.fasta")
+
+def process_glob():
+    files = glob.glob("clusts/sleeping_beauty_grass.fasta")
+    res = {}
+    cores = multiprocessing.cpu_count() - 1
+
+    with multiprocessing.Pool(cores) as pool:
+        res = pool.starmap(process_file, [(file, 37) for file in files])
+    # dump as json:
+    with open("mfe.json", "w") as f:
+        json.dump(res, f)
+    return res
+
+
+def eval_max_free_sec_struct(folder):
+    files = glob.glob(folder + "/sleeping_beauty_150*.fasta")
+    files.append("clusts/sleeping_beauty_grass.fasta")
+    print(files)
+    exit(0)
     res = {}
     cores = multiprocessing.cpu_count() - 1
 
@@ -145,57 +165,127 @@ def eval_max_free_sec_struct(folder, temperature=37):
     return res
 
 
-eval_max_free_sec_struct("clusts")
-exit(0)
+def convert_to_fasta():
+    # load the file: "./clusts/sleeping_beauty_grass.fasta":
+    with open("./clusts/sleeping_beauty_grass.dna", "r") as f:
+        lines = f.readlines()
 
-for file in ["Dorn.zip", "logo_mosla_bw.bmp"]:  # ,
-    packets = mesa_encode(file, raptor_dist_func, False, 0)
-    save_packets_fasta(f"clusts/{file}_raptor_dist.fasta", packets, True)
+    with open("./clusts/sleeping_beauty_grass.fasta", "w") as f:
+        for i, line in enumerate(lines):
+            f.write(">" + str(i) + "\n" + line)
 
-    packets = mesa_encode(file, bmp_low_entropy_evo_dist, False, 0)
-    save_packets_fasta(f"clusts/{file}_evo_low_dist.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_evo_dist, True, 0)
-    save_packets_fasta(f"clusts/{file}_evo_low_dist_payloadxor.fasta", packets, True)
+def generate_for_mfe(file, distname, dist, use_payload_xor, seed_spacing):
+    _, foldername, _ = main(filename=file, repair_symbols=2, while_count=65536, out_size=65536, chunk_size=35,
+                            sequential=True, spare1core=True, seed_len_format="H",
+                            method='RU10', mode1bmp=False, drop_above=0.4, save_as_fasta=True,
+                            packets_to_create=None, save_as_zip=False, xor_by_seed=use_payload_xor,
+                            id_spacing=seed_spacing,
+                            custom_dist=dist)
+    # move the file to ./clusts:
+    filename = glob.glob(f"{foldername}/*.fasta")[0]  # fasta file is in a foler...
+    os.rename(filename,
+              f"./clusts/opt_{file}_150_{distname}_seedspacing{seed_spacing}{'_payloadxor' if use_payload_xor else ''}.fasta")
 
-    packets = mesa_encode(file, bmp_low_entropy_evo_dist, False, 4)
-    save_packets_fasta(f"clusts/{file}_evo_low_dist_seedspacing4.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_evo_dist, True, 4)
-    save_packets_fasta(f"clusts/{file}_evo_low_dist_payloadxor_seedspacing4.fasta", packets, True)
+if __name__ == "__main__":
+    # convert_to_fasta()
 
-    packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, False, 0)
-    save_packets_fasta(f"clusts/{file}_evo_high_dist.fasta", packets, True)
+    for distname, dist in [("raptor", raptor_dist), ("bmp_low_entropy_evo_dist", bmp_low_entropy_evo_dist),
+                           ("bmp_low_entropy_diff_dist", bmp_low_entropy_diff_dist),
+                           ("evo_compress_encrypt_high_entropy_dist", evo_compress_encrypt_high_entropy_dist),
+                           ("diff_compress_encrypt_high_entropy_dist", diff_compress_encrypt_high_entropy_dist)]:
+        for use_payload_xor in [True, False]:
+            for seed_spacing in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+                generate_for_mfe("sleeping_beauty", distname, dist, use_payload_xor, seed_spacing)
+    exit(0)
 
-    packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, True, 0)
-    save_packets_fasta(f"clusts/{file}_evo_high_dist_payloadxor.fasta", packets, True)
+    eval_max_free_sec_struct("clusts")
+    process_glob()
+    # eval_max_free_sec_struct("clusts")
+    # exit(0)
 
-    packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, False, 4)
-    save_packets_fasta(f"clusts/{file}_evo_high_dist_seedspacing4.fasta", packets, True)
+    for file in ["sleeping_beauty"]:  # ["Dorn.zip", "logo_mosla_bw.bmp"]:  # ,
+        packets = mesa_encode(file, raptor_dist, False, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_raptor_dist.fasta", packets, True)
 
-    packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, True, 4)
-    save_packets_fasta(f"clusts/{file}_evo_high_dist_payloadxor_seedspacing4.fasta", packets, True)
+        packets = mesa_encode(file, raptor_dist, False, 2)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_raptor_dist_seedspacing2.fasta", packets, True)
 
-    packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, False, 0)
-    save_packets_fasta(f"clusts/{file}_diff_high_dist.fasta", packets, True)
+        packets = mesa_encode(file, raptor_dist, False, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_raptor_dist_seedspacing4.fasta", packets, True)
 
-    packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, True, 0)
-    save_packets_fasta(f"clusts/{file}_diff_high_dist_payloadxor.fasta", packets, True)
+        packets = mesa_encode(file, raptor_dist, False, 6)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_raptor_dist_seedspacing6.fasta", packets, True)
 
-    packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, False, 4)
-    save_packets_fasta(f"clusts/{file}_diff_high_dist_seedspacing4.fasta", packets, True)
+        packets = mesa_encode(file, raptor_dist, False, 8)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_raptor_dist_seedspacing8.fasta", packets, True)
 
-    packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, True, 4)
-    save_packets_fasta(f"clusts/{file}_diff_high_dist_payloadxor_seedspacing4.fasta", packets, True)
+        packets = mesa_encode(file, bmp_low_entropy_evo_dist, False, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_low_dist.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_diff_dist, False, 0)
-    save_packets_fasta(f"clusts/{file}_diff_low_dist.fasta", packets, True)
+        packets = mesa_encode(file, bmp_low_entropy_evo_dist, True, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_low_dist_payloadxor.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_diff_dist, True, 0)
-    save_packets_fasta(f"clusts/{file}_diff_low_dist_payloadxor.fasta", packets, True)
+        packets = mesa_encode(file, bmp_low_entropy_evo_dist, False, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_low_dist_seedspacing4.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_diff_dist, False, 4)
-    save_packets_fasta(f"clusts/{file}_diff_low_dist_seedspacing4.fasta", packets, True)
+        packets = mesa_encode(file, bmp_low_entropy_evo_dist, True, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_low_dist_payloadxor_seedspacing4.fasta", packets, True)
 
-    packets = mesa_encode(file, bmp_low_entropy_diff_dist, True, 4)
-    save_packets_fasta(f"clusts/{file}_diff_low_dist_payloadxor_seedspacing4.fasta", packets, True)
+        packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, False, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_high_dist.fasta", packets, True)
+
+        packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, True, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_high_dist_payloadxor.fasta", packets, True)
+
+        packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, False, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_high_dist_seedspacing4.fasta", packets, True)
+
+        packets = mesa_encode(file, evo_compress_encrypt_high_entropy_dist, True, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_evo_high_dist_payloadxor_seedspacing4.fasta", packets, True)
+
+        packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, False, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_high_dist.fasta", packets, True)
+
+        packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, True, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_high_dist_payloadxor.fasta", packets, True)
+
+        packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, False, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_high_dist_seedspacing4.fasta", packets, True)
+
+        packets = mesa_encode(file, diff_compress_encrypt_high_entropy_dist, True, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_high_dist_payloadxor_seedspacing4.fasta", packets, True)
+
+        packets = mesa_encode(file, bmp_low_entropy_diff_dist, False, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_low_dist.fasta", packets, True)
+
+        packets = mesa_encode(file, bmp_low_entropy_diff_dist, True, 0)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_low_dist_payloadxor.fasta", packets, True)
+
+        packets = mesa_encode(file, bmp_low_entropy_diff_dist, False, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_low_dist_seedspacing4.fasta", packets, True)
+
+        packets = mesa_encode(file, bmp_low_entropy_diff_dist, True, 4)
+        packets = [x for x in packets if x.error_prob < 1.0][:5000]
+        save_packets_fasta(f"clusts/{file}_150_diff_low_dist_payloadxor_seedspacing4.fasta", packets, True)
