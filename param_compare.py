@@ -162,19 +162,34 @@ def plot_err_nums(label_file_names):
 def get_packets(seed_struct_str="H"):
     packets = []
     # for i in [True, False]:
-    i = True #False
-    packets.append(encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=0, mask_id=False, use_payload_xor=False, seed_struct_str=seed_struct_str))
-    # dump current packets to a file:
-    with open("tmp_packets.txt", "w") as f:
-        json.dump(packets, f)
-    for spacing in [2,4,6]: #range(8):
+    i = True  # False
+    # the following does only work for sleedping_beauty, chunk_size=4, default dist, id_spacing=0, , mask_id=False, use_payload_xor=False, seed_struct_str="I"
+    # check if "tmp_packets.json" exits:
+    if os.path.exists("tmp_packets.json"):
+        with open("tmp_packets.json", "r") as f:
+            packets = json.load(f)
+    else:
+        packets.append(
+            encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=0, mask_id=False,
+                               use_payload_xor=False, seed_struct_str=seed_struct_str))
+        # dump current packets to a file:
+        with open("tmp_packets.txt", "w") as f:
+            json.dump(packets, f)
+
+    for spacing in [6,7]:  # range(8):
         # packets.append(encode(file="sleeping_beauty", chunk_size=40, dist=dists[0], rules=rules,
-        #                      return_packets=True, repeats=repeats, id_spacing=spacing,
+        #                       return_packets=True, repeats=repeats, id_spacing=spacing,
         #                      mask_id=False, use_payload_xor=i,
         #                      seed_struct_str=seed_struct_str, return_packet_error_vals=True,
         #                      store_packets=False)[0])
-        packets.append(encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=spacing,
-                                          mask_id=False, use_payload_xor=i, seed_struct_str=seed_struct_str))
+        pkts_spacing = encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=spacing,
+                                          mask_id=False, use_payload_xor=i, seed_struct_str=seed_struct_str)
+        with open(f"tmp_packets_{spacing}.txt", "w") as f:
+            json.dump(pkts_spacing, f)
+        packets.append(pkts_spacing)
+    diff = [(packets[0][i], packets[1][i]) for i in range(len(packets[0]))]
+    with open("diff.json", "w") as f:
+        json.dump(diff, f)
     # print([(packets[0][i], packets[4][i]) for i in range(len(packets[0])) if
     #       packets[0][i].error_prob > packets[4][i].error_prob])
     data = [(len([(packets[0][i], packets[k][i]) for i in range(len(packets[0])) if
@@ -190,6 +205,7 @@ def get_packets(seed_struct_str="H"):
     # data for 4 byte seed:
     data = [(0, 0), (153358975, 129382698), (208309123, 165962976), (289514196, 187265992), (338349469, 198733809), (351124970, 208058394), (367586972, 210544770), (376977775, 213091391)]
     #"""
+    # data = [(0, 0), (269229127, 26016893), (398042431, 38142417), (418146256, 39966626)]
     print(data)
     with open("tmp_data.txt", "w") as f:
         json.dump(data, f)
@@ -443,8 +459,8 @@ if __name__ == "__main__":
 
     parse_all_files()
     """
-    get_packets()
-    #get_packets("I")
+    get_packets("I")
+    # get_packets("I")
     """
     # depending on the file content, some plots may fail, this is expected and should not be a problem
     try:
