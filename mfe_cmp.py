@@ -1,7 +1,10 @@
+import matplotlib
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+sns.set(font_scale=1.25)
 
 # sb_space0.dna
 b = [-95.19999694824219, -109.5, -74.80000305175781, -88.0999984741211, -89.0, -101.80000305175781, -99.0999984741211,
@@ -1644,6 +1647,7 @@ data = pd.DataFrame({'DNA-fountain': b,'DNA-fountain, spacing 2, payload xor': a
 melted_data = pd.melt(data)
 
 # Create the bar plot using Seaborn
+matplotlib.rcParams['figure.figsize'] = 10.0, 5.0
 sns.violinplot(x='variable', y='value', data=melted_data)
 
 # Add labels and title

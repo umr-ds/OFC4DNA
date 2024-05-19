@@ -163,14 +163,15 @@ def get_packets(seed_struct_str="H"):
     packets = []
     # for i in [True, False]:
     i = True  # False
+    #"""
     # the following does only work for sleedping_beauty, chunk_size=4, default dist, id_spacing=0, , mask_id=False, use_payload_xor=False, seed_struct_str="I"
     # check if "tmp_packets.json" exits:
-    if os.path.exists("tmp_packets.json"):
+    if os.path.exists("tmp_packets.json") and seed_struct_str == "I":
         with open("tmp_packets.json", "r") as f:
             packets = json.load(f)
     else:
         packets.append(
-            encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=0, mask_id=False,
+            encode_for_spacing(file="sleeping_beauty", chunk_size=20, dist=dists[0], id_spacing=0, mask_id=False,
                                use_payload_xor=False, seed_struct_str=seed_struct_str))
         # dump current packets to a file:
         with open("tmp_packets.txt", "w") as f:
@@ -182,7 +183,7 @@ def get_packets(seed_struct_str="H"):
         #                      mask_id=False, use_payload_xor=i,
         #                      seed_struct_str=seed_struct_str, return_packet_error_vals=True,
         #                      store_packets=False)[0])
-        pkts_spacing = encode_for_spacing(file="sleeping_beauty", chunk_size=40, dist=dists[0], id_spacing=spacing,
+        pkts_spacing = encode_for_spacing(file="sleeping_beauty", chunk_size=20, dist=dists[0], id_spacing=spacing,
                                           mask_id=False, use_payload_xor=i, seed_struct_str=seed_struct_str)
         with open(f"tmp_packets_{spacing}.txt", "w") as f:
             json.dump(pkts_spacing, f)
@@ -200,17 +201,24 @@ def get_packets(seed_struct_str="H"):
             range(len(packets))]
     """
     #matplotlib.rcParams["axes.formatter.limits"] = (-99, 99)
-    # data for 2 byte seed:
+    # data for 2 byte seed (laxer rules, long sequences):
     data = [(0, 0), (1118, 945), (1606, 1153), (1982, 1262), (2280, 1353), (2341, 1460), (2407, 1434), (2559, 1482)]
-    # data for 4 byte seed:
+    # data for 2 byte seed (typically used rules):
+    data = [(0, 0), (26262, 10493), (26398, 10675), (26434, 10689), (26393, 10730), (26369, 10639), (26334, 10742), (26311, 10757), (26461, 10700)]
+    # data for 4 byte seed (laxer rules, long sequences):
     data = [(0, 0), (153358975, 129382698), (208309123, 165962976), (289514196, 187265992), (338349469, 198733809), (351124970, 208058394), (367586972, 210544770), (376977775, 213091391)]
-    #"""
-    # data = [(0, 0), (269229127, 26016893), (398042431, 38142417), (418146256, 39966626)]
+    #data for 4 byte seed (typically used rules):
+    data = [(0, 0), (1370968148, 607618858), (1375851326, 612796209), (1374106800, 610914708)] (0 spacing, 2 spacing, 4 spacing, 6 spacing)
+    # data for 4 byte seed (max allowed homopolymer run = 2):
+    data = [(0, 0), (1332159635, 28458764), (1335852259, 28446819), (1335778244, 28445299)]
+    """
     print(data)
+    print([x-y for x,y in data])
+    print(max([x - y for x, y in data]))
     with open("tmp_data.txt", "w") as f:
         json.dump(data, f)
     # Extract the x values (index of tuples) starting from 1
-    x_values = np.arange(1, len(data) + 1)
+    x_values = np.array([2,4,6,8]) # np.arange(1, len(data) + 1)
 
     # Extract the y values (both the first and second elements of each tuple)
     y_values_1 = [x[0] for x in data[1:]]  # Skip the first pair
@@ -234,14 +242,14 @@ def get_packets(seed_struct_str="H"):
     if seed_struct_str == "I":
         plt.ylim((0, 376977775))
     # Add a legend
-    plt.legend(loc="lower right")
+    plt.legend(loc="right")
     plt.autoscale()
     plt.savefig(
-        f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.svg",
+        f"max_hp_2_additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.svg",
         format="svg",
         dpi=1200)
     plt.savefig(
-        f"additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.pdf",
+        f"max_hp_2_additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.pdf",
         bbox_inches="tight")
     # Show the plot
     plt.show()

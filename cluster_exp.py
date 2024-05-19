@@ -129,7 +129,7 @@ def process_file(file, temperature):
         pf = rna.pf()[1]
         tmp.append(pf)
         # limit to 5000 to be comparable to the other results:
-        if len(tmp) >= 5000:
+        if len(tmp) >= 20:
             break
         # print("PF: ", pf)
     return {file: tmp}
@@ -148,21 +148,22 @@ def process_glob():
     return res
 
 
-def eval_max_free_sec_struct(folder):
-    files = glob.glob(folder + "/sleeping_beauty_150*.fasta")
+def eval_max_free_sec_struct(folder, temperature=37):
+    files = glob.glob(folder + "/opt_sleeping_beauty_150*.fasta")
     files.append("clusts/sleeping_beauty_grass.fasta")
-    print(files)
-    exit(0)
     res = {}
     cores = multiprocessing.cpu_count() - 1
 
-    for file in files:
-        with multiprocessing.Pool(cores) as pool:
-            res[file] = pool.starmap(process_file, [(file, temperature) for file in files])
+    #for file in files:
+    with multiprocessing.Pool(cores) as pool:
+        res = pool.starmap(process_file, [(file, temperature) for file in files])
+    res_map = {}
+    for elem in res:
+        res_map.update(elem)
     # dump as json:
-    with open(folder + "/mfe.json", "w") as f:
-        json.dump(res, f)
-    return res
+    with open(folder + "/mfe_new.json", "w") as f:
+        json.dump(res_map, f)
+    return res_map
 
 
 def convert_to_fasta():
@@ -190,17 +191,17 @@ def generate_for_mfe(file, distname, dist, use_payload_xor, seed_spacing):
 
 if __name__ == "__main__":
     # convert_to_fasta()
-
-    for distname, dist in [("raptor", raptor_dist), ("bmp_low_entropy_evo_dist", bmp_low_entropy_evo_dist),
-                           ("bmp_low_entropy_diff_dist", bmp_low_entropy_diff_dist),
-                           ("evo_compress_encrypt_high_entropy_dist", evo_compress_encrypt_high_entropy_dist),
-                           ("diff_compress_encrypt_high_entropy_dist", diff_compress_encrypt_high_entropy_dist)]:
-        for use_payload_xor in [True, False]:
-            for seed_spacing in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
-                generate_for_mfe("sleeping_beauty", distname, dist, use_payload_xor, seed_spacing)
-    exit(0)
+    #eval_max_free_sec_struct("clusts")
+    #exit(0)
+    for distname, dist in [("raptor", raptor_dist)]:
+        for use_payload_xor in [True]:
+            for seed_spacing in [0]: #, 1, 2, 3, 4, 5, 6, 7, 8]:
+                generate_for_mfe("sleeping_beauty_2", distname, dist, use_payload_xor, seed_spacing)
+    #exit(0)
 
     eval_max_free_sec_struct("clusts")
+    #exit(0)
+
     process_glob()
     # eval_max_free_sec_struct("clusts")
     # exit(0)
