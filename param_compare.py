@@ -136,26 +136,40 @@ def create_graphs(csv_filename):
     # compare rule_violating_packets vs mask_id
 
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
 def plot_err_nums(label_file_names):
     colors = ["red", "green", "blue", "orange", "purple", "yellow", "pink", "brown", "black"]
-    lines = ["--", ":", "-.", ":"]
-    plt.figure(figsize=(10, 6))
+    lines = ["-", "-", "--", ":", "-.", ":"]
+
+    num_subplots = len(label_file_names)
+    fig, axes = plt.subplots(num_subplots, 1, figsize=(10, 3 * num_subplots), sharex=True)  # Adjusted height
+
     for idx, label_file_name in enumerate(label_file_names):
         label, file_name = label_file_name
         df = pd.read_csv(file_name)
-        # line plot of err_nums:
-        # plot each line of the csv as a value for a single line plot:
-        # use only the first 500 rows of the dataframe:
         df = df.head(300)
-        # cap the maximum value to 1.0:
         df = df.applymap(lambda x: 1.0 if x > 1.0 else x)
-        plot = sns.lineplot(x=range(df.__len__()), linestyle=lines[idx], y=df.err_nums, color=colors[idx],
-                            label=label)
-    plot.set_xlabel("Packet number")
-    plot.set_ylabel("Calculated error probability")
-    plot.set_title("Calculated error probability for the first 300 packets with a 2 byte seed")
-    plt.savefig("id_to_err_nums_dist" + ".pdf", bbox_inches="tight")
-    plt.savefig("id_to_err_nums_dist" + ".svg")
+
+        ax = axes[idx]
+        sns.lineplot(x=range(len(df)), linestyle=lines[idx], y=df.err_nums, color=colors[idx],
+                     label=label, ax=ax)
+
+        ax.set_xlabel("Packet number")
+        ax.set_ylabel("")
+        ax.set_title(f"Error probability for {label}")
+        ax.legend("", frameon=False)
+
+    # Add a common y-axis label
+    fig.text(0.04, 0.5, 'Calculated error probability', va='center', rotation='vertical')
+
+    fig.suptitle("Calculated error probability for the first 300 packets with a 2 byte seed")
+    fig.tight_layout(rect=[0.05, 0.03, 1, 0.95])  # Adjust layout to accommodate common y-label
+
+    plt.savefig("id_to_err_nums_dist.pdf", bbox_inches="tight")
+    plt.savefig("id_to_err_nums_dist.svg")
     plt.show(block=False)
 
 
@@ -446,6 +460,9 @@ def create_new_param_compare_csv():
 
 
 if __name__ == "__main__":
+    plot_err_nums([("plain IDs", "eval/err_nums/err_nums_Dorn_False_40_0_False_H_2023-09-07_10-35-44.csv"),
+                   ("XOR shuffled IDs", "eval/err_nums/err_nums_Dorn_False_40_0_True_H_2023-09-07_10-35-05.csv")])
+    exit(0)
     """
     create_new_param_compare_csv()
     plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
