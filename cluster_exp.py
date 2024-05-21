@@ -123,34 +123,23 @@ def process_file(file, temperature):
     RNA.cvar.temperature = temperature
     print(f"Processing {file}")
     fasta = load_fasta(file)
+    print(len(fasta))
     tmp = []
     for title, seq in fasta.items():
         rna = RNA.fold_compound(seq)
         pf = rna.pf()[1]
         tmp.append(pf)
         # limit to 5000 to be comparable to the other results:
-        if len(tmp) >= 20:
+        if len(tmp) >= 5000:
             break
         # print("PF: ", pf)
     return {file: tmp}
 
 
-def process_glob():
-    files = glob.glob("clusts/sleeping_beauty_grass.fasta")
-    res = {}
-    cores = multiprocessing.cpu_count() - 1
-
-    with multiprocessing.Pool(cores) as pool:
-        res = pool.starmap(process_file, [(file, 37) for file in files])
-    # dump as json:
-    with open("mfe.json", "w") as f:
-        json.dump(res, f)
-    return res
-
-
 def eval_max_free_sec_struct(folder, temperature=37):
-    files = glob.glob(folder + "/opt_sleeping_beauty_150*.fasta")
+    files = glob.glob(folder + "/cs_23_I_max_2_hp_10_gc_opt_sleeping_beauty_150*.fasta")
     files.append("clusts/sleeping_beauty_grass.fasta")
+    files.append("clusts/sleeping_beauty_dna_fountain_cs23.fasta")
     res = {}
     cores = multiprocessing.cpu_count() - 1
 
@@ -177,7 +166,7 @@ def convert_to_fasta():
 
 
 def generate_for_mfe(file, distname, dist, use_payload_xor, seed_spacing):
-    _, foldername, _ = main(filename=file, repair_symbols=2, while_count=65536, out_size=65536, chunk_size=35,
+    _, foldername, _ = main(filename=file, repair_symbols=2, while_count=65536, out_size=65536, chunk_size=25,
                             sequential=True, spare1core=True, seed_len_format="H",
                             method='RU10', mode1bmp=False, drop_above=0.4, save_as_fasta=True,
                             packets_to_create=None, save_as_zip=False, xor_by_seed=use_payload_xor,
@@ -191,8 +180,8 @@ def generate_for_mfe(file, distname, dist, use_payload_xor, seed_spacing):
 
 if __name__ == "__main__":
     # convert_to_fasta()
-    #eval_max_free_sec_struct("clusts")
-    #exit(0)
+    eval_max_free_sec_struct("clusts")
+    exit(0)
     for distname, dist in [("raptor", raptor_dist)]:
         for use_payload_xor in [True]:
             for seed_spacing in [0]: #, 1, 2, 3, 4, 5, 6, 7, 8]:
@@ -200,9 +189,8 @@ if __name__ == "__main__":
     #exit(0)
 
     eval_max_free_sec_struct("clusts")
-    #exit(0)
+    exit(0)
 
-    process_glob()
     # eval_max_free_sec_struct("clusts")
     # exit(0)
 
