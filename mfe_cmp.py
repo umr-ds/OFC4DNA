@@ -1641,7 +1641,7 @@ a_mean = np.mean(a)
 print(a_mean)
 
 # Create a DataFrame from the arrays
-data = pd.DataFrame({'DNA-fountain': b,'DNA-fountain, spacing 2, payload xor': a})
+data = pd.DataFrame({'DNA Fountain': b,'DNA Fountain, spacing 2, payloadxor': a})
 
 # Melt the DataFrame to convert it into a format suitable for Seaborn
 melted_data = pd.melt(data)
@@ -1656,11 +1656,11 @@ plt.xlabel('Used code')
 plt.ylabel('MFE (kcal/mol)')
 plt.grid(True)
 plt.title('Comparison: Minimum free energy (MFE) of the generated sequences')
-plt.savefig(f"mfe_cmp_sleeping_beauty_dnafountain.svg", format="svg", dpi=1200)
-plt.savefig(f"mfe_cmp_sleeping_beauty_dnafountain.pdf", bbox_inches="tight")
+plt.savefig(f"/tmp/mfe_cmp_sleeping_beauty_dnafountain.svg", format="svg", dpi=1200)
+plt.savefig(f"/tmp/mfe_cmp_sleeping_beauty_dnafountain.pdf", bbox_inches="tight")
 plt.show(block=False)
 
-plt.close()
+#plt.close()
 
 
 # Experiments using all variations of sleeping beauty (raptor, optimized, grass)

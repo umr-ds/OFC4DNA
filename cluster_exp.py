@@ -182,11 +182,15 @@ if __name__ == "__main__":
     # convert_to_fasta()
     eval_max_free_sec_struct("clusts")
     exit(0)
-    for distname, dist in [("raptor", raptor_dist)]:
-        for use_payload_xor in [True]:
-            for seed_spacing in [0]: #, 1, 2, 3, 4, 5, 6, 7, 8]:
-                generate_for_mfe("sleeping_beauty_2", distname, dist, use_payload_xor, seed_spacing)
-    #exit(0)
+
+    for distname, dist in [("raptor", raptor_dist), ("bmp_low_entropy_evo_dist", bmp_low_entropy_evo_dist),
+                           ("bmp_low_entropy_diff_dist", bmp_low_entropy_diff_dist),
+                           ("evo_compress_encrypt_high_entropy_dist", evo_compress_encrypt_high_entropy_dist),
+                           ("diff_compress_encrypt_high_entropy_dist", diff_compress_encrypt_high_entropy_dist)]:
+        for use_payload_xor in [True, False]:
+            for seed_spacing in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+                generate_for_mfe("lorem_ipsum100k.doc", distname, dist, use_payload_xor, seed_spacing)
+    exit(0)
 
     eval_max_free_sec_struct("clusts")
     exit(0)

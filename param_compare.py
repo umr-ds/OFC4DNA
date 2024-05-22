@@ -1,4 +1,5 @@
 import csv
+import glob
 import json
 import math
 import multiprocessing
@@ -140,6 +141,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
+
 def plot_err_nums(label_file_names):
     colors = ["red", "green", "blue", "orange", "purple", "yellow", "pink", "brown", "black"]
     lines = ["-", "-", "--", ":", "-.", ":"]
@@ -149,6 +151,7 @@ def plot_err_nums(label_file_names):
 
     for idx, label_file_name in enumerate(label_file_names):
         label, file_name = label_file_name
+        label = label.replace("plain IDs", "plain seeds").replace("XOR shuffled IDs", "XOR shuffled seeds")
         df = pd.read_csv(file_name)
         df = df.head(300)
         df = df.applymap(lambda x: 1.0 if x > 1.0 else x)
@@ -157,7 +160,7 @@ def plot_err_nums(label_file_names):
         sns.lineplot(x=range(len(df)), linestyle=lines[idx], y=df.err_nums, color=colors[idx],
                      label=label, ax=ax)
 
-        ax.set_xlabel("Packet number")
+        ax.set_xlabel("Raw seed used")
         ax.set_ylabel("")
         ax.set_title(f"Error probability for {label}")
         ax.legend("", frameon=False)
@@ -177,7 +180,7 @@ def get_packets(seed_struct_str="H"):
     packets = []
     # for i in [True, False]:
     i = True  # False
-    #"""
+    # """
     # the following does only work for sleedping_beauty, chunk_size=4, default dist, id_spacing=0, , mask_id=False, use_payload_xor=False, seed_struct_str="I"
     # check if "tmp_packets.json" exits:
     if os.path.exists("tmp_packets.json") and seed_struct_str == "I":
@@ -191,7 +194,7 @@ def get_packets(seed_struct_str="H"):
         with open("tmp_packets.txt", "w") as f:
             json.dump(packets, f)
 
-    for spacing in [6,7]:  # range(8):
+    for spacing in [6, 7]:  # range(8):
         # packets.append(encode(file="sleeping_beauty", chunk_size=40, dist=dists[0], rules=rules,
         #                       return_packets=True, repeats=repeats, id_spacing=spacing,
         #                      mask_id=False, use_payload_xor=i,
@@ -227,12 +230,12 @@ def get_packets(seed_struct_str="H"):
     data = [(0, 0), (1332159635, 28458764), (1335852259, 28446819), (1335778244, 28445299)]
     """
     print(data)
-    print([x-y for x,y in data])
+    print([x - y for x, y in data])
     print(max([x - y for x, y in data]))
     with open("tmp_data.txt", "w") as f:
         json.dump(data, f)
     # Extract the x values (index of tuples) starting from 1
-    x_values = np.array([2,4,6,8]) # np.arange(1, len(data) + 1)
+    x_values = np.array([2, 4, 6, 8])  # np.arange(1, len(data) + 1)
 
     # Extract the y values (both the first and second elements of each tuple)
     y_values_1 = [x[0] for x in data[1:]]  # Skip the first pair
@@ -460,8 +463,24 @@ def create_new_param_compare_csv():
 
 
 if __name__ == "__main__":
-    plot_err_nums([("plain IDs", "eval/err_nums/err_nums_Dorn_False_40_0_False_H_2023-09-07_10-35-44.csv"),
-                   ("XOR shuffled IDs", "eval/err_nums/err_nums_Dorn_False_40_0_True_H_2023-09-07_10-35-05.csv")])
+    plot_err_nums([("plain IDs", "eval/err_nums/err_nums_aes_Dorn_False_40_0_False_H_2023-09-06_10-20-36.csv"),
+                   ("XOR shuffled IDs", "eval/err_nums/err_nums_aes_Dorn_False_40_0_True_H_2023-09-07_11-05-49.csv")])
+    #exit(0)
+    files = glob.glob("eval/err_nums/*aes_Dorn*.csv")
+    for file in files:
+        df = pd.read_csv(file)
+        # line plot of err_nums:
+        # plot each line of the csv as a value for a single line plot:
+        # use only the first 500 rows of the dataframe:
+        df = df.head(300)
+        # cap the maximum value to 1.0:
+        df = df.applymap(lambda x: False if x >= 1.0 else True)  # False if error >= 1.0 else True
+        err_nums = df["err_nums"].tolist()
+        # if not any(err_nums[:250]):
+        if err_nums[96] >= 1.0 and err_nums[100] >= 1.0 and err_nums[0] < 0.5:
+            print(file)
+    exit(0)
+
     exit(0)
     """
     create_new_param_compare_csv()
