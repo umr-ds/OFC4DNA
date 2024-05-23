@@ -591,9 +591,11 @@ if __name__ == "__main__":
     all_files = bmp_files + xlsx_files + zip_high_files + txt_files
     encode_dataset(all_files)
 
+    # set mesa_apikey to the "apikey" from the ENV variables:
+    mesa_apikey = os.getenv("apikey")
     # create errors using mesa:
     introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=True,
-                     mesa_apikey="grM5qnMhlB-UhSAJQt8wXBb4g85Mj6vJ6qrLudOKNLA")
+                     mesa_apikey=mesa_apikey)
 
     # crewate errors simple:
     introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=False)
