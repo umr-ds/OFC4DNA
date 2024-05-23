@@ -1,3 +1,4 @@
+import multiprocessing
 import subprocess
 
 from NOREC4DNA.invivo_window_decoder import load_fasta
@@ -289,80 +290,95 @@ with open("test_split.yaml", "w") as o_:
 """
 
 
-def encode_dataset(files, dna_fountain_dir):
-    # save the current working dir:
+def run_dna_fountain_command(current_dir, filename, abs_file, dna_fountain_dir, ):
+    if len(glob.glob(f"{current_dir}/datasets/out/ez_{filename}_nc*.fasta")) > 0:
+        print(f"[EZ] Skipping {filename} as it already exists")
+        return
+    command = f"cd {dna_fountain_dir.strip()} && " \
+              f"source venv/bin/activate && " \
+              f"python encode.py -f {abs_file} -l 23 -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --alpha 0.07 --out {filename}.fasta && " \
+              f"cp {filename}.fasta {current_dir}/datasets/out/ez_{filename}.fasta && " \
+              f"cd {current_dir.strip()}"
+    # rename the file to the correct name:
+
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+                               executable="/bin/bash")
+    stdout, stderr = process.communicate()
+    print(f"{stdout}")
+    print(f"{stderr}")
+    chunks = int(stderr.decode('utf-8').split("There are ")[1].split(" input segments")[0])
+    # rename the file {current_dir}/datasets/out/ez_{filename}.fasta to {current_dir}/datasets/out/ez_{filename}_nc{chunks}.fasta:
+    os.rename(f"{current_dir}/datasets/out/ez_{filename}.fasta",
+              f"{current_dir}/datasets/out/ez_{filename}_nc{chunks}.fasta")
+    return stdout.decode('utf-8')
+
+
+def run_grass_command(current_dir, file_name, full_path):
+    if len(glob.glob(f"{current_dir}/datasets/out/grass_{file_name}_blocks*.fasta")) == 0:
+        # encode using grass code using the external executable "./texttodna --encode --input <file>  --output <file>.dna":
+        process = subprocess.Popen(
+            f"cd datasets/grass && ./texttodna --encode --input {full_path} --output /tmp/{file_name}.dna && cd {current_dir.strip()}",
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable="/bin/bash")
+        stdout, _ = process.communicate()
+        blocks = stdout.decode("utf-8").split(" blocks,")[0].split(" ")[-1]
+        # open the output file and get the length of the first line (without newline):
+        with open(f"/tmp/{file_name}.dna", "r") as f:
+            lines = f.readlines()
+            grass_length = len(lines[0].strip())  # should be always 117 !
+        if grass_length != 117:
+            raise ValueError("Grass code produced a sequence with a length != 117!")
+        # write to a fasta file:
+        with open(f"{current_dir}/datasets/out/grass_{file_name}_blocks{blocks}.fasta", "w") as o_:
+            for i, line in enumerate(lines):
+                o_.write(f">grass_{i}\n")
+                o_.write(f"{line}\n")
+    else:
+        print(f"[Grass] Skipping {file_name} as it already exists")
+
+
+def run_encode_own(current_dir, file_name, full_path):
+    for dist_name, dist in {"bmp_low_entropy_evo_dist": bmp_low_entropy_evo_dist,
+                            "evo_compress_encrypt_high_entropy_dist": evo_compress_encrypt_high_entropy_dist,
+                            "raptor_dist": raptor_dist}.items():
+        for rs in [2, 3, 4]:
+            if len(glob.glob(f"{current_dir}/datasets/out/{file_name}_{dist_name}_rs{rs}_nc*.fasta")) > 0:
+                print(f"[OWN] Skipping {file_name} for {dist_name} ({rs} as it already exists")
+                continue
+            encoder = encode_to_fasta(f"{full_path}", 0, get_error_correction_encode("reedsolomon", rs), False,
+                                      True, 2, False, in_dist=dist, seed_len_str="I", chunk_size=25 - rs)
+            number_of_chunks = encoder.number_of_chunks
+            encoder.save_packets_fasta(
+                f"{current_dir}/datasets/out/{file_name}_{dist_name}_rs{rs}_nc{number_of_chunks}.fasta",
+                seed_is_filename=True)
+            # save the number of chunks to a file:
+            # with open(f"datasets/out/{file}_{dist_name}_number_of_chunks.txt", "w") as o_:
+            #    o_.write(f"{number_of_chunks}")
+
+
+def process_file(file):
     current_dir = os.getcwd()
+    # get filename only from path given in file using python libs:
+    file_name = os.path.basename(file)
+    # get the path:
+    path = os.path.dirname(file)
+    # get the full path:
+    full_path = os.path.abspath(file)
 
-    def run_dna_fountain_command(abs_file, filename, dna_fountain_dir, current_dir):
-        if len(glob.glob(f"{current_dir}/datasets/out/ez_{filename}_nc*.fasta")) > 0:
-            print(f"[EZ] Skipping {filename} as it already exists")
-            return
-        command = f"cd {dna_fountain_dir.strip()} && " \
-                  f"source venv/bin/activate && " \
-                  f"python encode.py -f {abs_file} -l 23 -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --alpha 0.07 --out {filename}.fasta && " \
-                  f"cp {filename}.fasta {current_dir}/datasets/out/ez_{filename}.fasta && " \
-                  f"cd {current_dir.strip()}"
-        # rename the file to the correct name:
+    # encode using Grass code:
+    run_grass_command(current_dir, file_name, full_path)
+    # encode using DNA Fountain:
+    run_dna_fountain_command(current_dir, file_name, full_path, dna_fountain_dir)
+    # encode using optimized codes:
+    run_encode_own(current_dir, file_name, full_path)
 
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
-                                   executable="/bin/bash")
-        stdout, stderr = process.communicate()
-        print(f"{stdout}")
-        print(f"{stderr}")
-        chunks = int(stderr.decode('utf-8').split("There are ")[1].split(" input segments")[0])
-        # rename the file {current_dir}/datasets/out/ez_{filename}.fasta to {current_dir}/datasets/out/ez_{filename}_nc{chunks}.fasta:
-        os.rename(f"{current_dir}/datasets/out/ez_{filename}.fasta",
-                  f"{current_dir}/datasets/out/ez_{filename}_nc{chunks}.fasta")
-        return stdout.decode('utf-8')
+    os.chdir(current_dir)
 
-    for file in files:
-        # get filename only from path given in file using python libs:
-        file_name = os.path.basename(file)
-        # get the path:
-        path = os.path.dirname(file)
-        # get the full path:
-        full_path = os.path.abspath(file)
-        if len(glob.glob(f"{current_dir}/datasets/out/grass_{file_name}_blocks*.fasta")) == 0:
-            # encode using grass code using the external executable "./texttodna --encode --input <file>  --output <file>.dna":
-            process = subprocess.Popen(
-                f"cd datasets/grass && ./texttodna --encode --input {full_path} --output /tmp/{file_name}.dna && cd {current_dir.strip()}",
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable="/bin/bash")
-            stdout, _ = process.communicate()
-            blocks = stdout.decode("utf-8").split(" blocks,")[0].split(" ")[-1]
-            # open the output file and get the length of the first line (without newline):
-            with open(f"/tmp/{file_name}.dna", "r") as f:
-                lines = f.readlines()
-                grass_length = len(lines[0].strip())  # should be always 117 !
-            if grass_length != 117:
-                raise ValueError("Grass code produced a sequence with a length != 117!")
-            # write to a fasta file:
-            with open(f"{current_dir}/datasets/out/grass_{file_name}_blocks{blocks}.fasta", "w") as o_:
-                for i, line in enumerate(lines):
-                    o_.write(f">grass_{i}\n")
-                    o_.write(f"{line}\n")
-        else:
-            print(f"[Grass] Skipping {file_name} as it already exists")
 
-        # encode using DNA Fountain:
-        run_dna_fountain_command(full_path, file_name, dna_fountain_dir, current_dir)
-
-        # encode using optimized codes:
-        for dist_name, dist in {"bmp_low_entropy_evo_dist": bmp_low_entropy_evo_dist,
-                                "evo_compress_encrypt_high_entropy_dist": evo_compress_encrypt_high_entropy_dist,
-                                "raptor_dist": raptor_dist}.items():
-            for rs in [2, 3, 4]:
-                if len(glob.glob(f"{current_dir}/datasets/out/{file_name}_{dist_name}_rs{rs}_nc*.fasta")) > 0:
-                    print(f"[OWN] Skipping {file_name} for {dist_name} ({rs} as it already exists")
-                    continue
-                encoder = encode_to_fasta(f"{full_path}", 0, get_error_correction_encode("reedsolomon", rs), False,
-                                          True, 2, False, in_dist=dist, seed_len_str="I", chunk_size=25 - rs)
-                number_of_chunks = encoder.number_of_chunks
-                encoder.save_packets_fasta(
-                    f"{current_dir}/datasets/out/{file_name}_{dist_name}_rs{rs}_nc{number_of_chunks}.fasta",
-                    seed_is_filename=True)
-                # save the number of chunks to a file:
-                # with open(f"datasets/out/{file}_{dist_name}_number_of_chunks.txt", "w") as o_:
-                #    o_.write(f"{number_of_chunks}")
+def encode_dataset(files):
+    # get cpu count:
+    cpu_count = multiprocessing.cpu_count()
+    with multiprocessing.Pool(processes=cpu_count-1) as pool:
+        pool.map(process_file, files)
 
 
 def introduce_errors(folder, mesa_mode=False, mesa_apikey="IgGD6Cfdlnqa4tUungucZpKp3hfYkt1IDqg0Bn3BxEE"):
@@ -573,7 +589,7 @@ if __name__ == "__main__":
     txt_files = [f"datasets/TXT_tiny/004{i}-txt.txt" for i in range(5)]
 
     all_files = bmp_files + xlsx_files + zip_high_files + txt_files
-    encode_dataset(all_files, dna_fountain_dir)
+    encode_dataset(all_files)
 
     # create errors using mesa:
     introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=True,
