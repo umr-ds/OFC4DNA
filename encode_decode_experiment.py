@@ -1,6 +1,9 @@
 import multiprocessing
+import struct
 import subprocess
+from io import BytesIO
 
+from Helper import calculate_entropy
 from NOREC4DNA.invivo_window_decoder import load_fasta
 import os
 import numpy as np
@@ -9,6 +12,7 @@ import base64
 import glob
 from NOREC4DNA.norec4dna import get_error_correction_decode, RU10Decoder, RU10Encoder, get_error_correction_encode
 from NOREC4DNA.norec4dna.distributions.RaptorDistribution import RaptorDistribution
+from NOREC4DNA.norec4dna.helper.quaternary2Bin import tranlate_quat_to_byte
 from cluster_exp import raptor_dist, bmp_low_entropy_evo_dist, bmp_low_entropy_diff_dist, \
     evo_compress_encrypt_high_entropy_dist, diff_compress_encrypt_high_entropy_dist
 from NOREC4DNA.norec4dna.helper.RU10Helper import intermediate_symbols
@@ -53,7 +57,8 @@ def decode_from_fasta(filename, number_of_chunks, dist, error_correction, use_se
     _, decoder.s, decoder.h = intermediate_symbols(number_of_chunks, decoder.distribution)
     decoder.createAuxBlocks()
     decoder.progress_bar = decoder.create_progress_bar(number_of_chunks + 0.02 * number_of_chunks)
-    res = decoder.decodeFile(id_len_format=seed_len_str)
+    res = decoder.decodeFile(packet_len_format="", crc_len_format="", number_of_chunks_len_format="",
+                             id_len_format=seed_len_str)
     print(f"Success: {res}")
     res_data = decoder.saveDecodedFile(last_chunk_len_format="", null_is_terminator=False, print_to_output=False,
                                        partial_decoding=True)
@@ -103,7 +108,7 @@ def get_payload_xor(filename):
 
 
 def get_num_chunks(filename):
-    return filename.split("nc")[1].split("_")[0]
+    return int(filename.split("nc")[1].split("_")[0].split(".")[0])
 
 
 # load mesa_config.json into a dict:
@@ -121,7 +126,7 @@ def get_mesa_errors_seqs(sequence, error_multiplier=1.0, apikey="IgGD6Cfdlnqa4tU
     config["asHTML"] = False
     config["sequence"] = sequence
     mesa_config = apply_multiplier(config, error_multiplier)
-    res = requests.post("http://127.0.0.1:5000/api/all", json=mesa_config)
+    res = requests.post("http://mesa.mosla.de/api/all", json=mesa_config)
     return res.json()[sequence]["res"]["modified_sequence"].replace(" ", "")
 
 
@@ -377,8 +382,70 @@ def process_file(file):
 def encode_dataset(files):
     # get cpu count:
     cpu_count = multiprocessing.cpu_count()
-    with multiprocessing.Pool(processes=cpu_count-1) as pool:
+    with multiprocessing.Pool(processes=cpu_count - 5) as pool:
         pool.map(process_file, files)
+
+
+def introduce_errors_mp(folder, file, mesa_mode, mesa_apikey):
+    exp_res = []
+    # get filename only from path given in file using python libs:
+    file_name = os.path.basename(file)
+    # get the path:
+    path = os.path.dirname(file)
+    # get the full path:
+    full_path = os.path.abspath(file)
+    grass_enc = load_fasta(file)
+    # calculate the length of the sequences:
+    length = "".join(list(grass_enc.values())).replace("\n", "").replace("\r", "").replace(" ", "")
+    # get the other matching files for this experiment:
+    exp_files = glob.glob(f"{file.replace('grass_', '*').split('_blocks')[0]}*.fasta")
+
+    if mesa_mode:
+        for error_multiplier in [0.8, 1.0, 1.02, 1.04, 1.06]:
+            for repeat in range(0, 4):
+                for file in exp_files:
+                    # load file as a fasta file:
+                    total_nts = 0
+                    out = {}
+                    seqs = load_fasta(file)
+                    for key, seq in seqs.items():
+                        seq = seq.strip()
+                        total_nts += len(seq)
+                        out[key] = get_mesa_errors_seqs(seq, error_multiplier, mesa_apikey)
+                        if total_nts >= len(length):
+                            break
+
+                    # save the sequences to a new file:
+                    out_file = f"{folder}/mesa_error/{file_name}_mesaerror_{error_multiplier}_{repeat}.fasta"
+                    # continue if out_file exists:
+                    if os.path.exists(out_file):
+                        continue
+                    with open(out_file, "w") as o_:
+                        for key, value in out.items():
+                            o_.write(f">{key}\n")
+                            o_.write(f"{out[key]}\n")
+                    exp_res.append(f"{out_file},{error_multiplier},{repeat},mesa,mesa,mesa,mesa")
+
+    for error_rate in [0.01, 0.02, 0.03, 0.04, 0.05]:
+        # iterate over all files in "files" and add mutations to the sequences:
+        for repeat in range(0, 4):
+            for file in exp_files:
+                # load file as a fasta file:
+                total_nts = 0
+                seqs = load_fasta(file)
+                out, (subs, ins, dels, drop) = random_errors(seqs, error_rate, 0.00001, max_nts=len(length))
+
+                # save the sequences to a new file:
+                out_file = f"{folder}/error/{file_name}_error_{error_rate}_{repeat}.fasta"
+                # continue if out_file exists:
+                if os.path.exists(out_file):
+                    continue
+                with open(out_file, "w") as o_:
+                    for key, value in out.items():
+                        o_.write(f">{key}\n")
+                        o_.write(f"{out[key]}\n")
+                exp_res.append(f"{out_file},{error_rate},{repeat},{subs},{ins},{dels},{drop}")
+    return exp_res
 
 
 def introduce_errors(folder, mesa_mode=False, mesa_apikey="IgGD6Cfdlnqa4tUungucZpKp3hfYkt1IDqg0Bn3BxEE"):
@@ -390,58 +457,13 @@ def introduce_errors(folder, mesa_mode=False, mesa_apikey="IgGD6Cfdlnqa4tUungucZ
     files = glob.glob(f"{folder}/grass*.fasta")
 
     exp_res = ["file,error_rate,repeat,subs,ins,dels,drop"]
-    for file in files:
-        # get filename only from path given in file using python libs:
-        file_name = os.path.basename(file)
-        # get the path:
-        path = os.path.dirname(file)
-        # get the full path:
-        full_path = os.path.abspath(file)
-        grass_enc = load_fasta(file)
-        # calculate the length of the sequences:
-        length = "".join(list(grass_enc.values())).replace("\n", "").replace("\r", "").replace(" ", "")
-        # get the other matching files for this experiment:
-        exp_files = glob.glob(f"{file.replace('grass_', '*').split('_blocks')[0]}*.fasta")
 
-        if mesa_mode:
-            for error_multiplier in [0.8, 1.0, 1.02, 1.04, 1.06]:
-                for repeat in range(0, 4):
-                    for file in exp_files:
-                        # load file as a fasta file:
-                        total_nts = 0
-                        out = {}
-                        seqs = load_fasta(file)
-                        for key, seq in seqs.items():
-                            seq = seq.strip()
-                            total_nts += len(seq)
-                            out[key] = get_mesa_errors_seqs(seq, error_multiplier, mesa_apikey)
-                            if total_nts >= len(length):
-                                break
+    # call introduce_errors_mp for each file in files using multiprocessing pool:
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 5) as pool:
+        res = pool.starmap(introduce_errors_mp, [(folder, file, mesa_mode, mesa_apikey) for file in files])
+        for r in res:
+            exp_res.extend(r)
 
-                        # save the sequences to a new file:
-                        out_file = f"{folder}/mesa_error/{file_name}_mesaerror_{error_multiplier}.fasta"
-                        with open(out_file, "w") as o_:
-                            for key, value in out.items():
-                                o_.write(f">{key}\n")
-                                o_.write(f"{out[key]}\n")
-                        exp_res.append(f"{out_file},{error_multiplier},{repeat},mesa,mesa,mesa,mesa")
-
-        for error_rate in [0.01, 0.02, 0.03, 0.04, 0.05]:
-            # iterate over all files in "files" and add mutations to the sequences:
-            for repeat in range(0, 4):
-                for file in exp_files:
-                    # load file as a fasta file:
-                    total_nts = 0
-                    seqs = load_fasta(file)
-                    out, (subs, ins, dels, drop) = random_errors(seqs, error_rate, 0.00001, max_nts=len(length))
-
-                    # save the sequences to a new file:
-                    out_file = f"{folder}/error/{file_name}_error_{error_rate}.fasta"
-                    with open(out_file, "w") as o_:
-                        for key, value in out.items():
-                            o_.write(f">{key}\n")
-                            o_.write(f"{out[key]}\n")
-                    exp_res.append(f"{out_file},{error_rate},{repeat},{subs},{ins},{dels},{drop}")
     # save exp_res to a csv file:
     with open(f"{folder}/{'error' if not mesa_mode else 'mesa_error'}/error_results.csv", "w") as o_:
         for line in exp_res:
@@ -577,6 +599,116 @@ def analyze():
     # Save the results in a csv file.
 
 
+def decode_for_overhead(fasta_file, repeats=5):
+    err = 0
+    # get the dist:
+    dist = get_dist(fasta_file)[0]
+    # get the error correction:
+    rs_sym = get_rs_sym(fasta_file)
+    error_correction = get_error_correction_decode("reedsolomon", rs_sym)
+    seed_spacing = 2
+    # get the static number of chunks:
+    static_number_of_chunks = get_num_chunks(fasta_file)
+    # create the decoder:
+    decoder = RU10Decoder(file=fasta_file, error_correction=error_correction, use_headerchunk=False,
+                          static_number_of_chunks=static_number_of_chunks, checksum_len_str=None,
+                          xor_by_seed=True, mask_id=False, id_spacing=seed_spacing)
+    decoder.number_of_chunks = static_number_of_chunks
+    distribution = RaptorDistribution(static_number_of_chunks)
+    distribution.f = dist
+    distribution.d = [x for x in range(0, 41)]
+    # set the distribution:
+    decoder.distribution = distribution
+    _, decoder.s, decoder.h = intermediate_symbols(static_number_of_chunks, decoder.distribution)
+    decoder.createAuxBlocks()
+    # decode the file:
+    # decoder.parse_raw_packet()
+    decoder.read_all_before_decode = False
+    decoder.isPseudo = True
+    # read the fasta file:
+    fastalines = load_fasta(fasta_file)
+    packet_list = []
+    for key, value in fastalines.items():
+        dna_str = value.replace("\n", "")
+        # un-space the dna string:
+        struct_len = struct.calcsize("I") * 4
+        if seed_spacing > 0 and struct_len > 0:
+            res = ""
+            input_str = list(dna_str)
+            i = 0
+            while len(res) < struct_len:
+                res += input_str[i]
+                input_str[i] = " "
+                i += seed_spacing + 1
+            input_str = "".join(input_str)
+            input_str = input_str.replace(" ", "")
+            res += input_str
+            dna_str = res
+        try:
+            new_pack = decoder.parse_raw_packet(BytesIO(tranlate_quat_to_byte(dna_str)).read(),
+                                                crc_len_format="",
+                                                number_of_chunks_len_format="",
+                                                packet_len_format="",
+                                                id_len_format="I")
+            if len(new_pack.used_packets) > 0:
+                packet_list.append(new_pack)
+        except Exception as ex:
+            raise ex
+            err += 1
+            print(ex)
+
+    # decode the packets:
+    results = []
+    for i in range(repeats):
+        random.shuffle(packet_list)
+        needed_packets = 0
+        unrecovered_zero_overhead = -1
+        for packet in packet_list:
+            if decoder.GEPP is None or not decoder.is_decoded():
+                needed_packets += 1
+                decoder.input_new_packet(packet)
+                if needed_packets == static_number_of_chunks:
+                    unrecovered_zero_overhead = static_number_of_chunks - len(
+                        [x for x in decoder.GEPP.result_mapping if x != -1])
+            else:
+                overhead = (needed_packets - static_number_of_chunks)
+                needed_packets = 0
+                decoder.GEPP = None
+                decoder.correct = 0
+                decoder.corrupt = 0
+                decoder.degreeToPacket = {}
+                print(
+                    f"Decoding for {fasta_file} finished with overhead {overhead} and unrecovered {unrecovered_zero_overhead} (run {i})")
+                results.append(
+                    {"file": fasta_file, "repeat": i, "overhead": overhead, "unrecovered": unrecovered_zero_overhead})
+                break
+    # decoder.decodeFile(packet_len_format="", crc_len_format="", number_of_chunks_len_format="",
+    #                   id_len_format="I")
+    # get the number of packets that were required to decode the file:
+    return results
+
+
+def gen_entropy_table():
+    # generate latex table entries for all used files in the large expriements:
+    res = []
+    for file in all_files:
+        entropy = calculate_entropy(file, convert_to_dna=False)[0]
+        entropy_dna = calculate_entropy(file, convert_to_dna=True)[0]
+        # create string and round to 5 decimal places:
+        entropy = str(round(entropy, 5))
+        entropy_dna = str(round(entropy_dna, 5))
+        filesize = os.path.getsize(file)
+        # format filesize as a string with , after for each thousand (e.g 1000 -> 1,000):
+        filesize = "{:,}".format(filesize)
+        file_name = os.path.basename(file)
+        res.append(r"\newcontent{" + file_name.replace(r"_",
+                                                       r"\_") + r"} & \newcontent{" + filesize + r"} & \newcontent{" + "todo" + r"} & \newcontent{" + entropy_dna + r"} & \newcontent{" + entropy + r"} \\" + "\n\\hline\n")
+    print("".join(res))
+    # save to "asdf.txt":
+    with open("asdf.txt", "w") as o_:
+        o_.write("".join(res))
+
+
 if __name__ == "__main__":
     dna_fountain_dir = "/home/schwarz/dna-fountain"  # "/home/schwarz/dna-fountain"
     # bmp_files = glob.glob("datasets/BMP_tiny/001*-bmp.bmp")
@@ -589,17 +721,35 @@ if __name__ == "__main__":
     txt_files = [f"datasets/TXT_tiny/004{i}-txt.txt" for i in range(5)]
 
     all_files = bmp_files + xlsx_files + zip_high_files + txt_files
-    encode_dataset(all_files)
-
+    # encode_dataset(all_files)
+    # " ""
     # set mesa_apikey to the "apikey" from the ENV variables:
-    mesa_apikey = os.getenv("apikey")
+    # mesa_apikey = "grM5qnMhlB-UhSAJQt8wXBb4g85Mj6vJ6qrLudOKNLA" #os.getenv("apikey")
     # create errors using mesa:
-    introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=True,
-                     mesa_apikey=mesa_apikey)
+    # introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=True,
+    #                 mesa_apikey=mesa_apikey)
 
-    # crewate errors simple:
-    introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=False)
+    # create errors simple:
+    # introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=False)
 
-    try_decode("/home/schwarz/OFC4DNA/datasets/out/mesa_error", dna_fountain_dir)
+    # try_decode("/home/schwarz/OFC4DNA/datasets/out/mesa_error", dna_fountain_dir)
 
-    try_decode("/home/schwarz/OFC4DNA/datasets/out/error", dna_fountain_dir)
+    # try_decode("/home/schwarz/OFC4DNA/datasets/out/error", dna_fountain_dir)
+
+    # " ""
+    res = []
+    current_dir = os.getcwd()
+    base_folder = f"{current_dir}/datasets/out"
+    # for file in glob.glob(f"{base_folder}/*.fasta"):
+    #    # skip files for grass and ez:
+    #    if os.path.basename(file).startswith("0"):
+    #        res.append(decode_for_overhead(file))
+    # perform the decoding using multiprocessing:
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 5) as pool:
+        res = pool.starmap(decode_for_overhead, [(file,) for file in glob.glob(f"{base_folder}/*.fasta") if
+                                                 os.path.basename(file).startswith("0")])
+
+    json.dump(res, open("overhead_results.json", "w"))
+
+    # calculate the entropy of the files:
+    # gen_entropy_table()
