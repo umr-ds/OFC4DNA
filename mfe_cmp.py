@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 sns.set(font_scale=1.25)
+sns.set_style("darkgrid")
 
 # sb_space0.dna
 b = [-95.19999694824219, -109.5, -74.80000305175781, -88.0999984741211, -89.0, -101.80000305175781, -99.0999984741211,
@@ -1656,8 +1657,8 @@ plt.xlabel('Used code')
 plt.ylabel('MFE (kcal/mol)')
 plt.grid(True)
 plt.title('Comparison: Minimum free energy (MFE) of the generated sequences')
-plt.savefig(f"/tmp/mfe_cmp_sleeping_beauty_dnafountain.svg", format="svg", dpi=1200)
-plt.savefig(f"/tmp/mfe_cmp_sleeping_beauty_dnafountain.pdf", bbox_inches="tight")
+plt.savefig(f"R:/mfe_cmp_sleeping_beauty_dnafountain.svg", format="svg", dpi=1200)
+plt.savefig(f"R:/mfe_cmp_sleeping_beauty_dnafountain.pdf", bbox_inches="tight")
 plt.show(block=False)
 
 #plt.close()
