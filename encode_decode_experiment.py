@@ -3,6 +3,8 @@ import struct
 import subprocess
 from io import BytesIO
 
+from norec4dna.helper import should_drop_packet
+
 from Helper import calculate_entropy
 from NOREC4DNA.invivo_window_decoder import load_fasta
 import os
@@ -598,6 +600,19 @@ def analyze():
     # while limiting to the max number of bases used by grass. Then tying to decode them using the different decoders.
     # Save the results in a csv file.
 
+def load_plain_fasta(fasta_file):
+    """
+    Loads fasta file and returns a dictionary of sequences
+    """
+    fasta_dict = {}
+    with open(fasta_file, 'r') as f:
+        for line in f:
+            if line.startswith('>'):
+                seq_name = line.strip()
+                fasta_dict[seq_name] = ''
+            else:
+                fasta_dict[seq_name] += line.strip()
+    return fasta_dict
 
 def decode_for_overhead(fasta_file, repeats=5):
     err = 0
@@ -609,11 +624,13 @@ def decode_for_overhead(fasta_file, repeats=5):
     seed_spacing = 2
     # get the static number of chunks:
     static_number_of_chunks = get_num_chunks(fasta_file)
+    xor_by_seed = "baseline" not in fasta_file
     # create the decoder:
     decoder = RU10Decoder(file=fasta_file, error_correction=error_correction, use_headerchunk=False,
                           static_number_of_chunks=static_number_of_chunks, checksum_len_str=None,
-                          xor_by_seed=True, mask_id=False, id_spacing=seed_spacing)
+                          xor_by_seed=xor_by_seed, mask_id=False, id_spacing=seed_spacing)
     decoder.number_of_chunks = static_number_of_chunks
+    decoder.count = False
     distribution = RaptorDistribution(static_number_of_chunks)
     distribution.f = dist
     distribution.d = [x for x in range(0, 41)]
@@ -628,7 +645,12 @@ def decode_for_overhead(fasta_file, repeats=5):
     # read the fasta file:
     fastalines = load_fasta(fasta_file)
     packet_list = []
+    i = 0
+    decoder.correct += 1
     for key, value in fastalines.items():
+        if i > static_number_of_chunks + 100:
+            # no need to load all packets:
+            break
         dna_str = value.replace("\n", "")
         # un-space the dna string:
         struct_len = struct.calcsize("I") * 4
@@ -645,28 +667,32 @@ def decode_for_overhead(fasta_file, repeats=5):
             res += input_str
             dna_str = res
         try:
+
             new_pack = decoder.parse_raw_packet(BytesIO(tranlate_quat_to_byte(dna_str)).read(),
                                                 crc_len_format="",
                                                 number_of_chunks_len_format="",
                                                 packet_len_format="",
                                                 id_len_format="I")
             if len(new_pack.used_packets) > 0:
-                packet_list.append(new_pack)
+                packet_list.append((decoder.removeAndXorAuxPackets_new(new_pack), new_pack))
         except Exception as ex:
             raise ex
             err += 1
             print(ex)
-
+    decoder.correct -= 1
     # decode the packets:
     results = []
     for i in range(repeats):
         random.shuffle(packet_list)
         needed_packets = 0
         unrecovered_zero_overhead = -1
-        for packet in packet_list:
+        for (rm, packet) in packet_list:
+            if len(packet.used_packets) == 0:
+                continue
             if decoder.GEPP is None or not decoder.is_decoded():
                 needed_packets += 1
-                decoder.input_new_packet(packet)
+
+                decoder.input_to_GEPP_new(rm, packet)
                 if needed_packets == static_number_of_chunks:
                     unrecovered_zero_overhead = static_number_of_chunks - len(
                         [x for x in decoder.GEPP.result_mapping if x != -1])
@@ -709,6 +735,15 @@ def gen_entropy_table():
         o_.write("".join(res))
 
 
+def get_error_pred(fasta_file):
+    fast_items = load_plain_fasta(fasta_file)
+    rules = FastDNARules() # TODO: check if the mesa-like rules are applied!
+    seq_errs = []
+    for key, dna_data in fast_items.items():
+        seq_errs.append(rules.apply_all_rules(dna_data))
+    return {"file": os.path.basename(fasta_file), "errs": seq_errs}
+
+
 if __name__ == "__main__":
     dna_fountain_dir = "/home/schwarz/dna-fountain"  # "/home/schwarz/dna-fountain"
     # bmp_files = glob.glob("datasets/BMP_tiny/001*-bmp.bmp")
@@ -720,7 +755,7 @@ if __name__ == "__main__":
     # txt_files = glob.glob("datasets/TXT_tiny/004*-txt.txt")
     txt_files = [f"datasets/TXT_tiny/004{i}-txt.txt" for i in range(5)]
 
-    all_files = bmp_files + xlsx_files + zip_high_files + txt_files
+    all_files = txt_files + xlsx_files + bmp_files + zip_high_files
     # encode_dataset(all_files)
     # " ""
     # set mesa_apikey to the "apikey" from the ENV variables:
@@ -732,24 +767,56 @@ if __name__ == "__main__":
     # create errors simple:
     # introduce_errors("/home/schwarz/OFC4DNA/datasets/out", mesa_mode=False)
 
-    # try_decode("/home/schwarz/OFC4DNA/datasets/out/mesa_error", dna_fountain_dir)
+    # try_decode("./datasets/out/mesa_error", dna_fountain_dir)
 
     # try_decode("/home/schwarz/OFC4DNA/datasets/out/error", dna_fountain_dir)
 
+    #encoder = encode_to_fasta("sleeping_beauty", 289, get_error_correction_encode("reedsolomon", 2), False, True, 2,
+    #                          False,
+    #                          raptor_dist)
+    #encoder.save_packets_fasta(
+    #    f"out_file.fasta",
+    #    seed_is_filename=True)
+    #res, res_data, decoder = decode_from_fasta("out_file.fasta", 289, raptor_dist,
+    #                                           get_error_correction_decode("reedsolomon", 2), False, True, 2,
+    #                                           False)
+
     # " ""
+    # load "overhead.csv":
+    overhead = pd.read_csv("overhead_exp.csv", sep=", ")
+    # get all unique files:
+    seen_files = overhead["file"].unique()
+
     res = []
     current_dir = os.getcwd()
     base_folder = f"{current_dir}/datasets/out"
-    # for file in glob.glob(f"{base_folder}/*.fasta"):
-    #    # skip files for grass and ez:
-    #    if os.path.basename(file).startswith("0"):
-    #        res.append(decode_for_overhead(file))
+    """
+    for file in glob.glob(f"{base_folder}/*.fasta"):
+        # skip files for grass and ez:
+        base_filename = os.path.basename(file)
+        if base_filename.startswith("0") and base_filename not in seen_files:
+            res.append(decode_for_overhead(file))
+    """
+    """
+    # load json into dataframe:
+    #df = pd.read_json("file_to_seq_err.json")
+    #print(df.describe())
+
+    with multiprocessing.Pool(processes=5) as pool:
+        file_to_seq_err = pool.map(get_error_pred, glob.glob(f"{base_folder}/*.fasta"))
+        json.dump(file_to_seq_err, open("file_to_seq_err.json", "w"))
+    """
+
+    #"""
     # perform the decoding using multiprocessing:
+    file_subset = [(file,) for file in glob.glob(f"{base_folder}/*.fasta") if
+                                                 os.path.basename(file).startswith("0") and os.path.basename(
+                                                     file) not in seen_files]
     with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 5) as pool:
-        res = pool.starmap(decode_for_overhead, [(file,) for file in glob.glob(f"{base_folder}/*.fasta") if
-                                                 os.path.basename(file).startswith("0")])
+        res = pool.starmap(decode_for_overhead, file_subset)
 
     json.dump(res, open("overhead_results.json", "w"))
 
     # calculate the entropy of the files:
     # gen_entropy_table()
+    # """

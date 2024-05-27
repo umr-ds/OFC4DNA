@@ -111,7 +111,7 @@ def encode_big_buck_bunny():
     #                         evo_compress_encrypt_high_entropy_dist),
     #                        ("diff_compress_encrypt_high_entropy_dist",
     #                         diff_compress_encrypt_high_entropy_dist)]:
-    mp_gen_min_packets(filename="datasets/big_buck_bunny_1080p_surround.avi", repair_symbols=2, while_count=13511121, out_size=13511121,
+    mp_gen_min_packets(filename="sleeping_beauty", repair_symbols=2, while_count=13511121, out_size=13511121,
                        chunk_size=chunk_size, sequential=True, spare1core=True, insert_header=False,
                        seed_len_format="I", method='RU10', mode1bmp=False, drop_above=1.0,
                        save_as_fasta=True, packets_to_create=13511121, xor_by_seed=use_payload_xor,
