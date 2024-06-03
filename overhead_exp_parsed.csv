@@ -1,0 +1,752 @@
+overhead,unrecovered,run,Method,RS,#Chunks,File
+1,301,0,Low Entropy - evo,3,604,0023-xlsx.xlsx
+2,347,0,Low Entropy - evo,3,681,0024-xlsx.xlsx
+3,295,1,Low Entropy - evo,3,604,0023-xlsx.xlsx
+5,504,1,Low Entropy - evo,3,681,0024-xlsx.xlsx
+0,0,2,Low Entropy - evo,3,604,0023-xlsx.xlsx
+1,342,2,Low Entropy - evo,3,681,0024-xlsx.xlsx
+0,0,3,Low Entropy - evo,3,604,0023-xlsx.xlsx
+1,321,4,Low Entropy - evo,3,604,0023-xlsx.xlsx
+0,0,3,Low Entropy - evo,3,681,0024-xlsx.xlsx
+4,521,4,Low Entropy - evo,3,681,0024-xlsx.xlsx
+1,289,0,Low Entropy - evo,4,633,0023-xlsx.xlsx
+0,0,1,Low Entropy - evo,4,633,0023-xlsx.xlsx
+5,528,0,Low Entropy - evo,4,713,0024-xlsx.xlsx
+5,481,2,Low Entropy - evo,4,633,0023-xlsx.xlsx
+1,377,1,Low Entropy - evo,4,713,0024-xlsx.xlsx
+1,311,3,Low Entropy - evo,4,633,0023-xlsx.xlsx
+0,0,2,Low Entropy - evo,4,713,0024-xlsx.xlsx
+3,465,4,Low Entropy - evo,4,633,0023-xlsx.xlsx
+1,359,3,Low Entropy - evo,4,713,0024-xlsx.xlsx
+1,353,4,Low Entropy - evo,4,713,0024-xlsx.xlsx
+5,2902,0,Low Entropy - evo,3,5896,0022-xlsx.xlsx
+3,19,0,Low Entropy - evo,3,20,0040-txt.txt
+3,14,1,Low Entropy - evo,3,20,0040-txt.txt
+2,18,2,Low Entropy - evo,3,20,0040-txt.txt
+4,18,3,Low Entropy - evo,3,20,0040-txt.txt
+5,20,4,Low Entropy - evo,3,20,0040-txt.txt
+8,19,0,Low Entropy - evo,4,21,0040-txt.txt
+1,13,1,Low Entropy - evo,4,21,0040-txt.txt
+2,11,2,Low Entropy - evo,4,21,0040-txt.txt
+3,17,3,Low Entropy - evo,4,21,0040-txt.txt
+3,18,4,Low Entropy - evo,4,21,0040-txt.txt
+7,57,0,Low Entropy - evo,3,72,0043-txt.txt
+5,33,1,Low Entropy - evo,3,72,0043-txt.txt
+3,53,2,Low Entropy - evo,3,72,0043-txt.txt
+1,46,3,Low Entropy - evo,3,72,0043-txt.txt
+3,39,4,Low Entropy - evo,3,72,0043-txt.txt
+1,34,0,Low Entropy - evo,4,76,0043-txt.txt
+2,56,1,Low Entropy - evo,4,76,0043-txt.txt
+4,39,2,Low Entropy - evo,4,76,0043-txt.txt
+3,62,3,Low Entropy - evo,4,76,0043-txt.txt
+1,33,4,Low Entropy - evo,4,76,0043-txt.txt
+4,21,0,Low Entropy - evo,3,29,0044-txt.txt
+1,22,1,Low Entropy - evo,3,29,0044-txt.txt
+3,24,2,Low Entropy - evo,3,29,0044-txt.txt
+4,18,3,Low Entropy - evo,3,29,0044-txt.txt
+0,0,4,Low Entropy - evo,3,29,0044-txt.txt
+1,18,0,Low Entropy - evo,4,30,0044-txt.txt
+4,13,1,Low Entropy - evo,4,30,0044-txt.txt
+1,16,2,Low Entropy - evo,4,30,0044-txt.txt
+2,18,3,Low Entropy - evo,4,30,0044-txt.txt
+1,12,4,Low Entropy - evo,4,30,0044-txt.txt
+1,3628,0,Low Entropy - evo,3,7290,0030-zip-highcompress.zip
+1,4442,1,Low Entropy - evo,3,5896,0022-xlsx.xlsx
+0,0,2,Low Entropy - evo,3,5896,0022-xlsx.xlsx
+0,0,1,Low Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,3,Low Entropy - evo,3,5896,0022-xlsx.xlsx
+1,2922,4,Low Entropy - evo,3,5896,0022-xlsx.xlsx
+3,5524,2,Low Entropy - evo,3,7290,0030-zip-highcompress.zip
+2,3024,0,Low Entropy - evo,4,6177,0022-xlsx.xlsx
+0,0,1,Low Entropy - evo,4,6177,0022-xlsx.xlsx
+2,3562,3,Low Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,2,Low Entropy - evo,4,6177,0022-xlsx.xlsx
+1,5457,4,Low Entropy - evo,3,7290,0030-zip-highcompress.zip
+6,4656,3,Low Entropy - evo,4,6177,0022-xlsx.xlsx
+1,3126,4,Low Entropy - evo,4,6177,0022-xlsx.xlsx
+2,5623,0,Low Entropy - evo,4,7637,0030-zip-highcompress.zip
+0,0,1,Low Entropy - evo,4,7637,0030-zip-highcompress.zip
+1,5765,2,Low Entropy - evo,4,7637,0030-zip-highcompress.zip
+0,0,3,Low Entropy - evo,4,7637,0030-zip-highcompress.zip
+0,0,4,Low Entropy - evo,4,7637,0030-zip-highcompress.zip
+1,8173,0,Low Entropy - evo,3,16478,0033-zip-highcompress.zip
+1,8370,1,Low Entropy - evo,3,16478,0033-zip-highcompress.zip
+2,12322,2,Low Entropy - evo,3,16478,0033-zip-highcompress.zip
+2,8267,3,Low Entropy - evo,3,16478,0033-zip-highcompress.zip
+0,0,4,Low Entropy - evo,3,16478,0033-zip-highcompress.zip
+3,8657,0,Low Entropy - evo,4,17262,0033-zip-highcompress.zip
+2,311,0,Raptor,4,633,0023-xlsx.xlsx
+1,456,1,Raptor,4,633,0023-xlsx.xlsx
+3,417,2,Raptor,4,633,0023-xlsx.xlsx
+1,335,3,Raptor,4,633,0023-xlsx.xlsx
+7,424,4,Raptor,4,633,0023-xlsx.xlsx
+1,361,0,Raptor,2,651,0024-xlsx.xlsx
+2,525,1,Raptor,2,651,0024-xlsx.xlsx
+2,427,2,Raptor,2,651,0024-xlsx.xlsx
+0,0,3,Raptor,2,651,0024-xlsx.xlsx
+3,572,4,Raptor,2,651,0024-xlsx.xlsx
+2,4177,0,Raptor,3,5896,0022-xlsx.xlsx
+9,6156,0,Raptor,3,7290,0030-zip-highcompress.zip
+8,5196,1,Raptor,3,5896,0022-xlsx.xlsx
+5,4767,2,Raptor,3,5896,0022-xlsx.xlsx
+13,6139,1,Raptor,3,7290,0030-zip-highcompress.zip
+8,5180,3,Raptor,3,5896,0022-xlsx.xlsx
+2,4221,0,Low Entropy - evo,2,5640,0022-xlsx.xlsx
+4,5002,4,Raptor,3,5896,0022-xlsx.xlsx
+4,5962,2,Raptor,3,7290,0030-zip-highcompress.zip
+19,12,0,Raptor,2,19,0040-txt.txt
+1,10,1,Raptor,2,19,0040-txt.txt
+0,0,2,Raptor,2,19,0040-txt.txt
+2,16,3,Raptor,2,19,0040-txt.txt
+3,11,4,Raptor,2,19,0040-txt.txt
+1,11,0,Raptor,2,12,0041-txt.txt
+1,10,1,Raptor,2,12,0041-txt.txt
+2,9,2,Raptor,2,12,0041-txt.txt
+0,0,3,Raptor,2,12,0041-txt.txt
+0,0,4,Raptor,2,12,0041-txt.txt
+3,46,0,Low Entropy - evo,2,94,0042-txt.txt
+1,74,1,Low Entropy - evo,2,94,0042-txt.txt
+3,52,2,Low Entropy - evo,2,94,0042-txt.txt
+0,0,3,Low Entropy - evo,2,94,0042-txt.txt
+2,42,4,Low Entropy - evo,2,94,0042-txt.txt
+1,33,0,Raptor,2,94,0042-txt.txt
+0,0,1,Raptor,2,94,0042-txt.txt
+1,60,2,Raptor,2,94,0042-txt.txt
+3,35,3,Raptor,2,94,0042-txt.txt
+3,72,0,Low Entropy - evo,3,98,0042-txt.txt
+5,57,4,Raptor,2,94,0042-txt.txt
+4,57,1,Low Entropy - evo,3,98,0042-txt.txt
+1,83,2,Low Entropy - evo,3,98,0042-txt.txt
+2,54,3,Low Entropy - evo,3,98,0042-txt.txt
+3,53,4,Low Entropy - evo,3,98,0042-txt.txt
+0,0,0,Low Entropy - evo,4,103,0042-txt.txt
+0,0,1,Low Entropy - evo,4,103,0042-txt.txt
+6,82,2,Low Entropy - evo,4,103,0042-txt.txt
+4,50,3,Low Entropy - evo,4,103,0042-txt.txt
+3,59,4,Low Entropy - evo,4,103,0042-txt.txt
+0,0,0,Low Entropy - evo,2,69,0043-txt.txt
+2,37,1,Low Entropy - evo,2,69,0043-txt.txt
+1,33,2,Low Entropy - evo,2,69,0043-txt.txt
+2,41,3,Low Entropy - evo,2,69,0043-txt.txt
+4,32,4,Low Entropy - evo,2,69,0043-txt.txt
+2,49,0,Raptor,3,72,0043-txt.txt
+2,46,1,Raptor,3,72,0043-txt.txt
+1,40,2,Raptor,3,72,0043-txt.txt
+0,0,3,Raptor,3,72,0043-txt.txt
+2,42,4,Raptor,3,72,0043-txt.txt
+1,13,0,Raptor,4,30,0044-txt.txt
+1,26,1,Raptor,4,30,0044-txt.txt
+2,12,2,Raptor,4,30,0044-txt.txt
+2,30,3,Raptor,4,30,0044-txt.txt
+2,25,4,Raptor,4,30,0044-txt.txt
+8,6317,3,Raptor,3,7290,0030-zip-highcompress.zip
+0,0,0,Low Entropy - evo,2,6973,0030-zip-highcompress.zip
+2,4221,1,Low Entropy - evo,2,5640,0022-xlsx.xlsx
+9,6257,4,Raptor,3,7290,0030-zip-highcompress.zip
+1,2822,2,Low Entropy - evo,2,5640,0022-xlsx.xlsx
+1,3540,1,Low Entropy - evo,2,6973,0030-zip-highcompress.zip
+5,4240,3,Low Entropy - evo,2,5640,0022-xlsx.xlsx
+2,2843,4,Low Entropy - evo,2,5640,0022-xlsx.xlsx
+17,12301,0,Raptor,4,17262,0033-zip-highcompress.zip
+3,3518,2,Low Entropy - evo,2,6973,0030-zip-highcompress.zip
+0,0,3,Low Entropy - evo,2,6973,0030-zip-highcompress.zip
+17,14596,1,Raptor,4,17262,0033-zip-highcompress.zip
+3,5259,4,Low Entropy - evo,2,6973,0030-zip-highcompress.zip
+8,14432,2,Raptor,4,17262,0033-zip-highcompress.zip
+6,15499,3,Raptor,4,17262,0033-zip-highcompress.zip
+9,15727,4,Raptor,4,17262,0033-zip-highcompress.zip
+1,320,0,Raptor,2,578,0023-xlsx.xlsx
+3,413,1,Raptor,2,578,0023-xlsx.xlsx
+0,0,2,Raptor,2,578,0023-xlsx.xlsx
+15,287,3,Raptor,2,578,0023-xlsx.xlsx
+6,425,4,Raptor,2,578,0023-xlsx.xlsx
+1,378,0,Raptor,4,713,0024-xlsx.xlsx
+1,365,1,Raptor,4,713,0024-xlsx.xlsx
+4,569,2,Raptor,4,713,0024-xlsx.xlsx
+3,551,3,Raptor,4,713,0024-xlsx.xlsx
+2,396,4,Raptor,4,713,0024-xlsx.xlsx
+3,4599,0,Raptor,2,5640,0022-xlsx.xlsx
+7,4277,0,Raptor,4,6177,0022-xlsx.xlsx
+5,4696,1,Raptor,2,5640,0022-xlsx.xlsx
+2,2889,1,Raptor,4,6177,0022-xlsx.xlsx
+3,4821,2,Raptor,2,5640,0022-xlsx.xlsx
+3,5026,2,Raptor,4,6177,0022-xlsx.xlsx
+3,2718,3,Raptor,2,5640,0022-xlsx.xlsx
+12,5490,3,Raptor,4,6177,0022-xlsx.xlsx
+6,4701,4,Raptor,2,5640,0022-xlsx.xlsx
+10,5193,4,Raptor,4,6177,0022-xlsx.xlsx
+4,16,0,Raptor,3,20,0040-txt.txt
+0,0,1,Raptor,3,20,0040-txt.txt
+0,0,2,Raptor,3,20,0040-txt.txt
+1,14,3,Raptor,3,20,0040-txt.txt
+7,14,4,Raptor,3,20,0040-txt.txt
+3,37,0,Raptor,4,103,0042-txt.txt
+1,35,1,Raptor,4,103,0042-txt.txt
+2,56,2,Raptor,4,103,0042-txt.txt
+0,0,3,Raptor,4,103,0042-txt.txt
+1,48,4,Raptor,4,103,0042-txt.txt
+0,0,0,Low Entropy - evo,2,578,0023-xlsx.xlsx
+0,0,1,Low Entropy - evo,2,578,0023-xlsx.xlsx
+1,435,2,Low Entropy - evo,2,578,0023-xlsx.xlsx
+0,0,3,Low Entropy - evo,2,578,0023-xlsx.xlsx
+1,431,4,Low Entropy - evo,2,578,0023-xlsx.xlsx
+1,382,0,Raptor,3,681,0024-xlsx.xlsx
+4,510,1,Raptor,3,681,0024-xlsx.xlsx
+2,260,2,Raptor,3,681,0024-xlsx.xlsx
+1,374,3,Raptor,3,681,0024-xlsx.xlsx
+1,406,4,Raptor,3,681,0024-xlsx.xlsx
+4,4924,0,Raptor,2,6973,0030-zip-highcompress.zip
+7,7194,0,Raptor,4,7637,0030-zip-highcompress.zip
+4,5947,1,Raptor,2,6973,0030-zip-highcompress.zip
+10,6856,1,Raptor,4,7637,0030-zip-highcompress.zip
+4,4884,2,Raptor,2,6973,0030-zip-highcompress.zip
+7,6108,3,Raptor,2,6973,0030-zip-highcompress.zip
+3,4762,2,Raptor,4,7637,0030-zip-highcompress.zip
+6,4775,4,Raptor,2,6973,0030-zip-highcompress.zip
+6,6575,3,Raptor,4,7637,0030-zip-highcompress.zip
+8,5807,4,Raptor,4,7637,0030-zip-highcompress.zip
+1,7,0,Raptor,4,13,0041-txt.txt
+1,7,1,Raptor,4,13,0041-txt.txt
+0,0,2,Raptor,4,13,0041-txt.txt
+0,0,3,Raptor,4,13,0041-txt.txt
+2,10,4,Raptor,4,13,0041-txt.txt
+3,83,0,Raptor,3,98,0042-txt.txt
+2,46,1,Raptor,3,98,0042-txt.txt
+1,38,2,Raptor,3,98,0042-txt.txt
+4,56,3,Raptor,3,98,0042-txt.txt
+0,0,4,Raptor,3,98,0042-txt.txt
+1,31,0,Raptor,2,69,0043-txt.txt
+1,33,1,Raptor,2,69,0043-txt.txt
+1,37,2,Raptor,2,69,0043-txt.txt
+4,53,3,Raptor,2,69,0043-txt.txt
+0,0,4,Raptor,2,69,0043-txt.txt
+0,0,0,Raptor,4,76,0043-txt.txt
+4,64,1,Raptor,4,76,0043-txt.txt
+0,0,2,Raptor,4,76,0043-txt.txt
+3,73,3,Raptor,4,76,0043-txt.txt
+1,34,4,Raptor,4,76,0043-txt.txt
+2,21,0,Raptor,2,28,0044-txt.txt
+5,17,1,Raptor,2,28,0044-txt.txt
+1,14,2,Raptor,2,28,0044-txt.txt
+5,21,3,Raptor,2,28,0044-txt.txt
+1,14,4,Raptor,2,28,0044-txt.txt
+0,0,0,Raptor,3,12,0041-txt.txt
+3,8,1,Raptor,3,12,0041-txt.txt
+2,8,2,Raptor,3,12,0041-txt.txt
+1,4,3,Raptor,3,12,0041-txt.txt
+2,9,4,Raptor,3,12,0041-txt.txt
+0,0,0,Raptor,4,21,0040-txt.txt
+4,15,1,Raptor,4,21,0040-txt.txt
+5,12,2,Raptor,4,21,0040-txt.txt
+0,0,3,Raptor,4,21,0040-txt.txt
+1,11,4,Raptor,4,21,0040-txt.txt
+0,0,0,Raptor,3,29,0044-txt.txt
+0,0,1,Raptor,3,29,0044-txt.txt
+1,17,2,Raptor,3,29,0044-txt.txt
+0,0,3,Raptor,3,29,0044-txt.txt
+7,18,0,Low Entropy - evo,2,19,0040-txt.txt
+2,23,4,Raptor,3,29,0044-txt.txt
+14,18,1,Low Entropy - evo,2,19,0040-txt.txt
+14,19,2,Low Entropy - evo,2,19,0040-txt.txt
+4,17,3,Low Entropy - evo,2,19,0040-txt.txt
+5,16,4,Low Entropy - evo,2,19,0040-txt.txt
+4,25,0,Low Entropy - evo,2,28,0044-txt.txt
+2,18,1,Low Entropy - evo,2,28,0044-txt.txt
+1,9,2,Low Entropy - evo,2,28,0044-txt.txt
+3,24,3,Low Entropy - evo,2,28,0044-txt.txt
+4,22,4,Low Entropy - evo,2,28,0044-txt.txt
+3,450,0,Raptor,3,604,0023-xlsx.xlsx
+1,289,1,Raptor,3,604,0023-xlsx.xlsx
+5,420,2,Raptor,3,604,0023-xlsx.xlsx
+1,267,3,Raptor,3,604,0023-xlsx.xlsx
+0,0,4,Raptor,3,604,0023-xlsx.xlsx
+3,495,0,Low Entropy - evo,2,651,0024-xlsx.xlsx
+3,339,1,Low Entropy - evo,2,651,0024-xlsx.xlsx
+0,0,2,Low Entropy - evo,2,651,0024-xlsx.xlsx
+3,503,3,Low Entropy - evo,2,651,0024-xlsx.xlsx
+0,0,4,Low Entropy - evo,2,651,0024-xlsx.xlsx
+16,-1,4,DNA Fountain,2,12,0041-txt.txt
+7,-1,1,DNA Fountain,2,12,0041-txt.txt
+5,-1,0,DNA Fountain,2,12,0041-txt.txt
+2,-1,2,DNA Fountain,2,12,0041-txt.txt
+3,-1,3,DNA Fountain,2,12,0041-txt.txt
+33,-1,4,DNA Fountain,2,19,0040-txt.txt
+11,-1,1,DNA Fountain,2,19,0040-txt.txt
+16,-1,0,DNA Fountain,2,19,0040-txt.txt
+21,-1,2,DNA Fountain,2,19,0040-txt.txt
+0,-1,3,DNA Fountain,2,19,0040-txt.txt
+18,-1,4,DNA Fountain,2,28,0044-txt.txt
+19,-1,2,DNA Fountain,2,28,0044-txt.txt
+11,-1,3,DNA Fountain,2,28,0044-txt.txt
+40,-1,1,DNA Fountain,2,28,0044-txt.txt
+18,-1,0,DNA Fountain,2,28,0044-txt.txt
+68,-1,4,DNA Fountain,2,69,0043-txt.txt
+94,-1,1,DNA Fountain,2,69,0043-txt.txt
+65,-1,0,DNA Fountain,2,69,0043-txt.txt
+52,-1,2,DNA Fountain,2,69,0043-txt.txt
+118,-1,3,DNA Fountain,2,69,0043-txt.txt
+38,-1,3,DNA Fountain,2,94,0042-txt.txt
+42,-1,2,DNA Fountain,2,94,0042-txt.txt
+29,-1,0,DNA Fountain,2,94,0042-txt.txt
+45,-1,1,DNA Fountain,2,94,0042-txt.txt
+35,-1,4,DNA Fountain,2,94,0042-txt.txt
+193,-1,3,DNA Fountain,2,578,0023-xlsx.xlsx
+154,-1,2,DNA Fountain,2,578,0023-xlsx.xlsx
+157,-1,4,DNA Fountain,2,578,0023-xlsx.xlsx
+184,-1,1,DNA Fountain,2,578,0023-xlsx.xlsx
+187,-1,0,DNA Fountain,2,578,0023-xlsx.xlsx
+196,-1,2,DNA Fountain,2,651,0024-xlsx.xlsx
+202,-1,4,DNA Fountain,2,651,0024-xlsx.xlsx
+158,-1,3,DNA Fountain,2,651,0024-xlsx.xlsx
+221,-1,0,DNA Fountain,2,651,0024-xlsx.xlsx
+192,-1,1,DNA Fountain,2,651,0024-xlsx.xlsx
+913,-1,2,DNA Fountain,2,5640,0022-xlsx.xlsx
+1031,-1,3,DNA Fountain,2,5640,0022-xlsx.xlsx
+994,-1,1,DNA Fountain,2,5640,0022-xlsx.xlsx
+941,-1,4,DNA Fountain,2,5640,0022-xlsx.xlsx
+961,-1,0,DNA Fountain,2,5640,0022-xlsx.xlsx
+1066,-1,0,DNA Fountain,2,6973,0030-zip-highcompress.zip
+1020,-1,1,DNA Fountain,2,6973,0030-zip-highcompress.zip
+981,-1,2,DNA Fountain,2,6973,0030-zip-highcompress.zip
+1017,-1,4,DNA Fountain,2,6973,0030-zip-highcompress.zip
+1002,-1,3,DNA Fountain,2,6973,0030-zip-highcompress.zip
+1901,-1,4,DNA Fountain,2,15761,0033-zip-highcompress.zip
+2052,-1,3,DNA Fountain,2,15761,0033-zip-highcompress.zip
+2012,-1,2,DNA Fountain,2,15761,0033-zip-highcompress.zip
+2046,-1,1,DNA Fountain,2,15761,0033-zip-highcompress.zip
+2016,-1,0,DNA Fountain,2,15761,0033-zip-highcompress.zip
+3959,-1,4,DNA Fountain,2,50155,0020-xlsx.xlsx
+3968,-1,1,DNA Fountain,2,50155,0020-xlsx.xlsx
+4198,-1,0,DNA Fountain,2,50155,0020-xlsx.xlsx
+4004,-1,2,DNA Fountain,2,50155,0020-xlsx.xlsx
+4114,-1,3,DNA Fountain,2,50155,0020-xlsx.xlsx
+3808,-1,0,DNA Fountain,2,51777,0021-xlsx.xlsx
+3775,-1,1,DNA Fountain,2,51777,0021-xlsx.xlsx
+3905,-1,3,DNA Fountain,2,51777,0021-xlsx.xlsx
+3790,-1,2,DNA Fountain,2,51777,0021-xlsx.xlsx
+3822,-1,4,DNA Fountain,2,51777,0021-xlsx.xlsx
+5534,-1,4,DNA Fountain,2,93894,0034-zip-highcompress.zip
+5499,-1,3,DNA Fountain,2,93894,0034-zip-highcompress.zip
+5497,-1,2,DNA Fountain,2,93894,0034-zip-highcompress.zip
+5551,-1,1,DNA Fountain,2,93894,0034-zip-highcompress.zip
+5713,-1,0,DNA Fountain,2,93894,0034-zip-highcompress.zip
+5992,-1,3,DNA Fountain,2,99559,0014-bmp.bmp
+6091,-1,4,DNA Fountain,2,99559,0014-bmp.bmp
+5907,-1,2,DNA Fountain,2,99559,0014-bmp.bmp
+6044,-1,1,DNA Fountain,2,99559,0014-bmp.bmp
+6328,-1,0,DNA Fountain,2,99559,0014-bmp.bmp
+6392,-1,3,DNA Fountain,2,121879,0031-zip-highcompress.zip
+6798,-1,2,DNA Fountain,2,121879,0031-zip-highcompress.zip
+6791,-1,4,DNA Fountain,2,121879,0031-zip-highcompress.zip
+6600,-1,1,DNA Fountain,2,121879,0031-zip-highcompress.zip
+6725,-1,0,DNA Fountain,2,121879,0031-zip-highcompress.zip
+6708,-1,2,DNA Fountain,2,131130,0013-bmp.bmp
+6902,-1,3,DNA Fountain,2,131130,0013-bmp.bmp
+6455,-1,1,DNA Fountain,2,131130,0013-bmp.bmp
+6482,-1,0,DNA Fountain,2,131130,0013-bmp.bmp
+6458,-1,4,DNA Fountain,2,131130,0013-bmp.bmp
+7312,-1,3,DNA Fountain,2,131130,0011-bmp.bmp
+7193,-1,2,DNA Fountain,2,131130,0011-bmp.bmp
+7276,-1,4,DNA Fountain,2,131130,0011-bmp.bmp
+7071,-1,0,DNA Fountain,2,131130,0011-bmp.bmp
+7223,-1,1,DNA Fountain,2,131130,0011-bmp.bmp
+7451,-1,2,DNA Fountain,2,131130,0012-bmp.bmp
+7271,-1,3,DNA Fountain,2,131130,0012-bmp.bmp
+7602,-1,1,DNA Fountain,2,131130,0012-bmp.bmp
+7455,-1,4,DNA Fountain,2,131130,0012-bmp.bmp
+7488,-1,0,DNA Fountain,2,131130,0012-bmp.bmp
+8018,-1,3,DNA Fountain,2,131130,0010-bmp.bmp
+7948,-1,2,DNA Fountain,2,131130,0010-bmp.bmp
+8104,-1,0,DNA Fountain,2,131130,0010-bmp.bmp
+8241,-1,4,DNA Fountain,2,131130,0010-bmp.bmp
+8443,-1,1,DNA Fountain,2,131130,0010-bmp.bmp
+9430,-1,0,DNA Fountain,2,210222,0032-zip-highcompress.zip
+9259,-1,1,DNA Fountain,2,210222,0032-zip-highcompress.zip
+8838,-1,4,DNA Fountain,2,210222,0032-zip-highcompress.zip
+9292,-1,2,DNA Fountain,2,210222,0032-zip-highcompress.zip
+8977,-1,3,DNA Fountain,2,210222,0032-zip-highcompress.zip
+0,0,0,Raptor (baseline),2,12,0041-txt.txt
+1,2,1,Raptor (baseline),2,12,0041-txt.txt
+4,5,2,Raptor (baseline),2,12,0041-txt.txt
+1,9,3,Raptor (baseline),2,12,0041-txt.txt
+3,4,4,Raptor (baseline),2,12,0041-txt.txt
+9,12,0,High Entropy - evo,2,12,0041-txt.txt
+6,12,1,High Entropy - evo,2,12,0041-txt.txt
+8,12,2,High Entropy - evo,2,12,0041-txt.txt
+10,12,3,High Entropy - evo,2,12,0041-txt.txt
+9,7,4,High Entropy - evo,2,12,0041-txt.txt
+3,8,0,Raptor (baseline),3,12,0041-txt.txt
+2,10,1,Raptor (baseline),3,12,0041-txt.txt
+4,8,2,Raptor (baseline),3,12,0041-txt.txt
+3,8,3,Raptor (baseline),3,12,0041-txt.txt
+4,6,4,Raptor (baseline),3,12,0041-txt.txt
+9,12,0,High Entropy - evo,3,12,0041-txt.txt
+8,11,1,High Entropy - evo,3,12,0041-txt.txt
+9,11,2,High Entropy - evo,3,12,0041-txt.txt
+5,10,3,High Entropy - evo,3,12,0041-txt.txt
+7,10,4,High Entropy - evo,3,12,0041-txt.txt
+11,13,0,High Entropy - evo,4,13,0041-txt.txt
+12,12,1,High Entropy - evo,4,13,0041-txt.txt
+9,13,2,High Entropy - evo,4,13,0041-txt.txt
+11,13,3,High Entropy - evo,4,13,0041-txt.txt
+13,12,4,High Entropy - evo,4,13,0041-txt.txt
+2,5,0,Raptor (baseline),4,13,0041-txt.txt
+3,7,1,Raptor (baseline),4,13,0041-txt.txt
+1,7,2,Raptor (baseline),4,13,0041-txt.txt
+2,9,3,Raptor (baseline),4,13,0041-txt.txt
+1,8,4,Raptor (baseline),4,13,0041-txt.txt
+4,16,0,Raptor (baseline),2,19,0040-txt.txt
+1,13,1,Raptor (baseline),2,19,0040-txt.txt
+3,6,2,Raptor (baseline),2,19,0040-txt.txt
+1,10,3,Raptor (baseline),2,19,0040-txt.txt
+1,12,4,Raptor (baseline),2,19,0040-txt.txt
+7,15,0,High Entropy - evo,2,19,0040-txt.txt
+3,16,1,High Entropy - evo,2,19,0040-txt.txt
+4,11,2,High Entropy - evo,2,19,0040-txt.txt
+8,15,3,High Entropy - evo,2,19,0040-txt.txt
+4,17,4,High Entropy - evo,2,19,0040-txt.txt
+4,17,0,Raptor (baseline),3,20,0040-txt.txt
+2,8,1,Raptor (baseline),3,20,0040-txt.txt
+1,14,2,Raptor (baseline),3,20,0040-txt.txt
+13,8,3,Raptor (baseline),3,20,0040-txt.txt
+1,14,4,Raptor (baseline),3,20,0040-txt.txt
+4,17,0,High Entropy - evo,3,20,0040-txt.txt
+3,18,1,High Entropy - evo,3,20,0040-txt.txt
+3,13,2,High Entropy - evo,3,20,0040-txt.txt
+2,16,3,High Entropy - evo,3,20,0040-txt.txt
+2,14,4,High Entropy - evo,3,20,0040-txt.txt
+2,18,0,High Entropy - evo,4,21,0040-txt.txt
+1,13,1,High Entropy - evo,4,21,0040-txt.txt
+2,10,2,High Entropy - evo,4,21,0040-txt.txt
+2,10,3,High Entropy - evo,4,21,0040-txt.txt
+1,11,4,High Entropy - evo,4,21,0040-txt.txt
+3,9,0,Raptor (baseline),4,21,0040-txt.txt
+0,0,1,Raptor (baseline),4,21,0040-txt.txt
+4,17,2,Raptor (baseline),4,21,0040-txt.txt
+2,18,3,Raptor (baseline),4,21,0040-txt.txt
+3,21,4,Raptor (baseline),4,21,0040-txt.txt
+2,18,0,High Entropy - evo,2,28,0044-txt.txt
+3,11,1,High Entropy - evo,2,28,0044-txt.txt
+1,15,2,High Entropy - evo,2,28,0044-txt.txt
+5,24,3,High Entropy - evo,2,28,0044-txt.txt
+3,12,4,High Entropy - evo,2,28,0044-txt.txt
+0,0,0,Raptor (baseline),2,28,0044-txt.txt
+1,17,1,Raptor (baseline),2,28,0044-txt.txt
+1,11,2,Raptor (baseline),2,28,0044-txt.txt
+3,23,3,Raptor (baseline),2,28,0044-txt.txt
+3,10,4,Raptor (baseline),2,28,0044-txt.txt
+0,0,0,High Entropy - evo,3,29,0044-txt.txt
+2,22,1,High Entropy - evo,3,29,0044-txt.txt
+0,0,2,High Entropy - evo,3,29,0044-txt.txt
+0,0,3,High Entropy - evo,3,29,0044-txt.txt
+2,16,4,High Entropy - evo,3,29,0044-txt.txt
+0,0,0,Raptor (baseline),3,29,0044-txt.txt
+1,14,1,Raptor (baseline),3,29,0044-txt.txt
+0,0,2,Raptor (baseline),3,29,0044-txt.txt
+1,19,3,Raptor (baseline),3,29,0044-txt.txt
+1,14,4,Raptor (baseline),3,29,0044-txt.txt
+2,23,0,Raptor (baseline),4,30,0044-txt.txt
+3,25,1,Raptor (baseline),4,30,0044-txt.txt
+2,17,2,Raptor (baseline),4,30,0044-txt.txt
+2,24,3,Raptor (baseline),4,30,0044-txt.txt
+1,14,4,Raptor (baseline),4,30,0044-txt.txt
+2,11,0,High Entropy - evo,4,30,0044-txt.txt
+2,13,1,High Entropy - evo,4,30,0044-txt.txt
+0,0,2,High Entropy - evo,4,30,0044-txt.txt
+0,0,3,High Entropy - evo,4,30,0044-txt.txt
+0,0,4,High Entropy - evo,4,30,0044-txt.txt
+1,31,0,High Entropy - evo,2,69,0043-txt.txt
+5,36,1,High Entropy - evo,2,69,0043-txt.txt
+1,37,2,High Entropy - evo,2,69,0043-txt.txt
+0,0,3,High Entropy - evo,2,69,0043-txt.txt
+0,0,4,High Entropy - evo,2,69,0043-txt.txt
+1,47,0,Raptor (baseline),2,69,0043-txt.txt
+5,57,1,Raptor (baseline),2,69,0043-txt.txt
+2,54,2,Raptor (baseline),2,69,0043-txt.txt
+1,43,3,Raptor (baseline),2,69,0043-txt.txt
+0,0,4,Raptor (baseline),2,69,0043-txt.txt
+2,33,0,Raptor (baseline),3,72,0043-txt.txt
+3,53,1,Raptor (baseline),3,72,0043-txt.txt
+1,28,2,Raptor (baseline),3,72,0043-txt.txt
+2,47,3,Raptor (baseline),3,72,0043-txt.txt
+0,0,4,Raptor (baseline),3,72,0043-txt.txt
+1,33,0,High Entropy - evo,3,72,0043-txt.txt
+4,28,1,High Entropy - evo,3,72,0043-txt.txt
+0,0,2,High Entropy - evo,3,72,0043-txt.txt
+4,36,3,High Entropy - evo,3,72,0043-txt.txt
+0,0,4,High Entropy - evo,3,72,0043-txt.txt
+2,32,0,High Entropy - evo,4,76,0043-txt.txt
+0,0,1,High Entropy - evo,4,76,0043-txt.txt
+0,0,2,High Entropy - evo,4,76,0043-txt.txt
+5,35,3,High Entropy - evo,4,76,0043-txt.txt
+3,65,4,High Entropy - evo,4,76,0043-txt.txt
+0,0,0,Raptor (baseline),4,76,0043-txt.txt
+1,52,1,Raptor (baseline),4,76,0043-txt.txt
+1,35,2,Raptor (baseline),4,76,0043-txt.txt
+0,0,3,Raptor (baseline),4,76,0043-txt.txt
+2,41,4,Raptor (baseline),4,76,0043-txt.txt
+4,70,0,High Entropy - evo,2,94,0042-txt.txt
+5,47,1,High Entropy - evo,2,94,0042-txt.txt
+1,50,2,High Entropy - evo,2,94,0042-txt.txt
+6,44,3,High Entropy - evo,2,94,0042-txt.txt
+0,0,4,High Entropy - evo,2,94,0042-txt.txt
+5,32,0,Raptor (baseline),2,94,0042-txt.txt
+0,0,1,Raptor (baseline),2,94,0042-txt.txt
+1,53,2,Raptor (baseline),2,94,0042-txt.txt
+1,78,3,Raptor (baseline),2,94,0042-txt.txt
+2,65,4,Raptor (baseline),2,94,0042-txt.txt
+5,60,0,Raptor (baseline),3,98,0042-txt.txt
+2,47,1,Raptor (baseline),3,98,0042-txt.txt
+3,60,2,Raptor (baseline),3,98,0042-txt.txt
+1,48,3,Raptor (baseline),3,98,0042-txt.txt
+0,0,4,Raptor (baseline),3,98,0042-txt.txt
+1,74,0,High Entropy - evo,3,98,0042-txt.txt
+1,53,1,High Entropy - evo,3,98,0042-txt.txt
+5,75,2,High Entropy - evo,3,98,0042-txt.txt
+2,84,3,High Entropy - evo,3,98,0042-txt.txt
+3,79,4,High Entropy - evo,3,98,0042-txt.txt
+1,61,0,Raptor (baseline),4,103,0042-txt.txt
+2,51,1,Raptor (baseline),4,103,0042-txt.txt
+0,0,2,Raptor (baseline),4,103,0042-txt.txt
+0,0,3,Raptor (baseline),4,103,0042-txt.txt
+5,25,4,Raptor (baseline),4,103,0042-txt.txt
+0,0,0,High Entropy - evo,4,103,0042-txt.txt
+5,49,1,High Entropy - evo,4,103,0042-txt.txt
+0,0,2,High Entropy - evo,4,103,0042-txt.txt
+1,53,3,High Entropy - evo,4,103,0042-txt.txt
+1,74,4,High Entropy - evo,4,103,0042-txt.txt
+0,0,0,Raptor (baseline),2,578,0023-xlsx.xlsx
+1,294,1,Raptor (baseline),2,578,0023-xlsx.xlsx
+3,297,2,Raptor (baseline),2,578,0023-xlsx.xlsx
+1,291,3,Raptor (baseline),2,578,0023-xlsx.xlsx
+1,310,4,Raptor (baseline),2,578,0023-xlsx.xlsx
+3,272,0,High Entropy - evo,2,578,0023-xlsx.xlsx
+1,291,1,High Entropy - evo,2,578,0023-xlsx.xlsx
+1,293,2,High Entropy - evo,2,578,0023-xlsx.xlsx
+2,441,3,High Entropy - evo,2,578,0023-xlsx.xlsx
+0,0,4,High Entropy - evo,2,578,0023-xlsx.xlsx
+1,460,0,High Entropy - evo,3,604,0023-xlsx.xlsx
+2,302,1,High Entropy - evo,3,604,0023-xlsx.xlsx
+1,290,2,High Entropy - evo,3,604,0023-xlsx.xlsx
+2,306,3,High Entropy - evo,3,604,0023-xlsx.xlsx
+2,322,4,High Entropy - evo,3,604,0023-xlsx.xlsx
+1,296,0,Raptor (baseline),3,604,0023-xlsx.xlsx
+2,389,1,Raptor (baseline),3,604,0023-xlsx.xlsx
+5,419,2,Raptor (baseline),3,604,0023-xlsx.xlsx
+4,469,3,Raptor (baseline),3,604,0023-xlsx.xlsx
+3,380,4,Raptor (baseline),3,604,0023-xlsx.xlsx
+0,0,0,High Entropy - evo,4,633,0023-xlsx.xlsx
+0,0,1,High Entropy - evo,4,633,0023-xlsx.xlsx
+1,292,2,High Entropy - evo,4,633,0023-xlsx.xlsx
+1,314,3,High Entropy - evo,4,633,0023-xlsx.xlsx
+3,317,4,High Entropy - evo,4,633,0023-xlsx.xlsx
+1,191,0,Raptor (baseline),4,633,0023-xlsx.xlsx
+2,252,1,Raptor (baseline),4,633,0023-xlsx.xlsx
+6,291,2,Raptor (baseline),4,633,0023-xlsx.xlsx
+6,483,3,Raptor (baseline),4,633,0023-xlsx.xlsx
+1,280,4,Raptor (baseline),4,633,0023-xlsx.xlsx
+5,599,0,Raptor (baseline),2,651,0024-xlsx.xlsx
+3,336,1,Raptor (baseline),2,651,0024-xlsx.xlsx
+4,469,2,Raptor (baseline),2,651,0024-xlsx.xlsx
+2,498,3,Raptor (baseline),2,651,0024-xlsx.xlsx
+3,467,4,Raptor (baseline),2,651,0024-xlsx.xlsx
+1,325,0,High Entropy - evo,2,651,0024-xlsx.xlsx
+1,330,1,High Entropy - evo,2,651,0024-xlsx.xlsx
+6,325,2,High Entropy - evo,2,651,0024-xlsx.xlsx
+0,0,3,High Entropy - evo,2,651,0024-xlsx.xlsx
+1,317,4,High Entropy - evo,2,651,0024-xlsx.xlsx
+2,532,0,Raptor (baseline),3,681,0024-xlsx.xlsx
+3,391,1,Raptor (baseline),3,681,0024-xlsx.xlsx
+5,536,2,Raptor (baseline),3,681,0024-xlsx.xlsx
+1,505,3,Raptor (baseline),3,681,0024-xlsx.xlsx
+5,605,4,Raptor (baseline),3,681,0024-xlsx.xlsx
+5,650,0,High Entropy - evo,3,681,0024-xlsx.xlsx
+2,502,1,High Entropy - evo,3,681,0024-xlsx.xlsx
+6,339,2,High Entropy - evo,3,681,0024-xlsx.xlsx
+0,0,3,High Entropy - evo,3,681,0024-xlsx.xlsx
+1,514,4,High Entropy - evo,3,681,0024-xlsx.xlsx
+0,0,0,High Entropy - evo,4,713,0024-xlsx.xlsx
+1,343,1,High Entropy - evo,4,713,0024-xlsx.xlsx
+1,541,2,High Entropy - evo,4,713,0024-xlsx.xlsx
+1,348,3,High Entropy - evo,4,713,0024-xlsx.xlsx
+1,344,4,High Entropy - evo,4,713,0024-xlsx.xlsx
+9,565,0,Raptor (baseline),4,713,0024-xlsx.xlsx
+1,390,1,Raptor (baseline),4,713,0024-xlsx.xlsx
+2,338,2,Raptor (baseline),4,713,0024-xlsx.xlsx
+3,326,3,Raptor (baseline),4,713,0024-xlsx.xlsx
+0,0,4,Raptor (baseline),4,713,0024-xlsx.xlsx
+8,4573,0,Raptor (baseline),2,5640,0022-xlsx.xlsx
+9,4669,1,Raptor (baseline),2,5640,0022-xlsx.xlsx
+4,4365,2,Raptor (baseline),2,5640,0022-xlsx.xlsx
+6,4013,3,Raptor (baseline),2,5640,0022-xlsx.xlsx
+4,4638,4,Raptor (baseline),2,5640,0022-xlsx.xlsx
+1,4210,0,High Entropy - evo,2,5640,0022-xlsx.xlsx
+3,2843,1,High Entropy - evo,2,5640,0022-xlsx.xlsx
+0,0,2,High Entropy - evo,2,5640,0022-xlsx.xlsx
+0,0,3,High Entropy - evo,2,5640,0022-xlsx.xlsx
+0,0,4,High Entropy - evo,2,5640,0022-xlsx.xlsx
+5,2951,0,High Entropy - evo,3,5896,0022-xlsx.xlsx
+3,3028,1,High Entropy - evo,3,5896,0022-xlsx.xlsx
+0,0,2,High Entropy - evo,3,5896,0022-xlsx.xlsx
+0,0,3,High Entropy - evo,3,5896,0022-xlsx.xlsx
+2,4415,4,High Entropy - evo,3,5896,0022-xlsx.xlsx
+6,5338,0,Raptor (baseline),3,5896,0022-xlsx.xlsx
+5,4921,1,Raptor (baseline),3,5896,0022-xlsx.xlsx
+20,5438,2,Raptor (baseline),3,5896,0022-xlsx.xlsx
+7,5407,3,Raptor (baseline),3,5896,0022-xlsx.xlsx
+4,5032,4,Raptor (baseline),3,5896,0022-xlsx.xlsx
+3,3510,1,High Entropy - evo,2,6973,0030-zip-highcompress.zip
+4,3516,2,High Entropy - evo,2,6973,0030-zip-highcompress.zip
+1,3523,3,High Entropy - evo,2,6973,0030-zip-highcompress.zip
+3,3528,4,High Entropy - evo,2,6973,0030-zip-highcompress.zip
+7,6020,0,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+8,6126,1,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+10,5855,2,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+6,5893,3,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+10,6677,4,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+0,0,0,High Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,1,High Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,2,High Entropy - evo,3,7290,0030-zip-highcompress.zip
+1,3606,3,High Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,4,High Entropy - evo,3,7290,0030-zip-highcompress.zip
+0,0,0,High Entropy - evo,4,7637,0030-zip-highcompress.zip
+0,0,1,High Entropy - evo,4,7637,0030-zip-highcompress.zip
+1,3799,2,High Entropy - evo,4,7637,0030-zip-highcompress.zip
+1,3808,3,High Entropy - evo,4,7637,0030-zip-highcompress.zip
+3,5734,4,High Entropy - evo,4,7637,0030-zip-highcompress.zip
+4,5519,0,Raptor (baseline),4,7637,0030-zip-highcompress.zip
+0,0,1,Raptor (baseline),4,7637,0030-zip-highcompress.zip
+3,6552,2,Raptor (baseline),4,7637,0030-zip-highcompress.zip
+8,6576,3,Raptor (baseline),4,7637,0030-zip-highcompress.zip
+11,7213,4,Raptor (baseline),4,7637,0030-zip-highcompress.zip
+4,12166,0,Raptor (baseline),2,15761,0033-zip-highcompress.zip
+7,5400,0,High Entropy - evo,4,6177,0022-xlsx.xlsx
+1,3090,1,High Entropy - evo,4,6177,0022-xlsx.xlsx
+1,3023,2,High Entropy - evo,4,6177,0022-xlsx.xlsx
+0,0,3,High Entropy - evo,4,6177,0022-xlsx.xlsx
+1,3040,4,High Entropy - evo,4,6177,0022-xlsx.xlsx
+1,2949,0,Raptor (baseline),4,6177,0022-xlsx.xlsx
+6,5267,1,Raptor (baseline),4,6177,0022-xlsx.xlsx
+10,5101,2,Raptor (baseline),4,6177,0022-xlsx.xlsx
+3,5050,3,Raptor (baseline),4,6177,0022-xlsx.xlsx
+6,5061,4,Raptor (baseline),4,6177,0022-xlsx.xlsx
+8,6114,0,Raptor (baseline),2,6973,0030-zip-highcompress.zip
+7,6346,1,Raptor (baseline),2,6973,0030-zip-highcompress.zip
+9,6221,2,Raptor (baseline),2,6973,0030-zip-highcompress.zip
+19,5529,3,Raptor (baseline),2,6973,0030-zip-highcompress.zip
+2,5572,4,Raptor (baseline),2,6973,0030-zip-highcompress.zip
+5,6713,0,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+0,0,1,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+8,5871,2,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+3,6135,3,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+11,6194,4,Raptor (baseline),3,7290,0030-zip-highcompress.zip
+2,11854,0,High Entropy - evo,2,15761,0033-zip-highcompress.zip
+0,0,1,High Entropy - evo,2,15761,0033-zip-highcompress.zip
+4,7990,2,High Entropy - evo,2,15761,0033-zip-highcompress.zip
+4,7891,3,High Entropy - evo,2,15761,0033-zip-highcompress.zip
+5,11813,4,High Entropy - evo,2,15761,0033-zip-highcompress.zip
+11,12900,0,Raptor,2,15761,0033-zip-highcompress.zip
+9,13783,1,Raptor,2,15761,0033-zip-highcompress.zip
+9,13963,2,Raptor,2,15761,0033-zip-highcompress.zip
+15,13915,3,Raptor,2,15761,0033-zip-highcompress.zip
+11,13965,4,Raptor,2,15761,0033-zip-highcompress.zip
+16,14074,0,Raptor (baseline),3,16478,0033-zip-highcompress.zip
+22,14628,1,Raptor (baseline),3,16478,0033-zip-highcompress.zip
+11,14765,2,Raptor (baseline),3,16478,0033-zip-highcompress.zip
+3,8553,0,High Entropy - evo,4,17262,0033-zip-highcompress.zip
+11,14895,3,Raptor (baseline),3,16478,0033-zip-highcompress.zip
+20,12070,4,Raptor (baseline),3,16478,0033-zip-highcompress.zip
+1,8616,1,High Entropy - evo,4,17262,0033-zip-highcompress.zip
+0,0,0,High Entropy - evo,3,16478,0033-zip-highcompress.zip
+30,44673,0,Raptor,2,51777,0021-xlsx.xlsx
+2,12356,1,High Entropy - evo,3,16478,0033-zip-highcompress.zip
+0,0,2,High Entropy - evo,4,17262,0033-zip-highcompress.zip
+33,48976,0,Raptor,3,54131,0021-xlsx.xlsx
+1,8242,2,High Entropy - evo,3,16478,0033-zip-highcompress.zip
+1,8704,3,High Entropy - evo,4,17262,0033-zip-highcompress.zip
+1,8152,3,High Entropy - evo,3,16478,0033-zip-highcompress.zip
+2,7942,0,Low Entropy - evo,2,15761,0033-zip-highcompress.zip
+0,0,4,High Entropy - evo,4,17262,0033-zip-highcompress.zip
+9,15985,0,Raptor (baseline),4,17262,0033-zip-highcompress.zip
+34,46459,1,Raptor,2,51777,0021-xlsx.xlsx
+9,13,0,Low Entropy - evo,4,13,0041-txt.txt
+11,12,1,Low Entropy - evo,4,13,0041-txt.txt
+13,13,2,Low Entropy - evo,4,13,0041-txt.txt
+11,13,3,Low Entropy - evo,4,13,0041-txt.txt
+6,13,4,Low Entropy - evo,4,13,0041-txt.txt
+7,15544,3,Raptor (baseline),4,17262,0033-zip-highcompress.zip
+13,13558,0,Raptor,3,16478,0033-zip-highcompress.zip
+7,13191,4,Raptor (baseline),4,17262,0033-zip-highcompress.zip
+13,14685,1,Raptor,3,16478,0033-zip-highcompress.zip
+16,13932,2,Raptor,3,16478,0033-zip-highcompress.zip
+15,14284,3,Raptor,3,16478,0033-zip-highcompress.zip
+21,48036,1,Raptor,3,54131,0021-xlsx.xlsx
+0,0,1,Low Entropy - evo,2,15761,0033-zip-highcompress.zip
+11,13434,4,Raptor,3,16478,0033-zip-highcompress.zip
+5,7816,2,Low Entropy - evo,2,15761,0033-zip-highcompress.zip
+3,7919,3,Low Entropy - evo,2,15761,0033-zip-highcompress.zip
+0,0,4,Low Entropy - evo,2,15761,0033-zip-highcompress.zip
+34,46253,2,Raptor,2,51777,0021-xlsx.xlsx
+29,45193,0,Raptor,2,50155,0020-xlsx.xlsx
+31,48419,2,Raptor,3,54131,0021-xlsx.xlsx
+30,44623,0,Raptor (baseline),2,50155,0020-xlsx.xlsx
+28,48001,0,Raptor (baseline),3,52435,0020-xlsx.xlsx
+40,48092,0,Raptor (baseline),4,54932,0020-xlsx.xlsx
+31,43805,1,Raptor (baseline),2,50155,0020-xlsx.xlsx
+29,46924,1,Raptor (baseline),3,52435,0020-xlsx.xlsx
+38,49480,1,Raptor (baseline),4,54932,0020-xlsx.xlsx
+23,45452,2,Raptor (baseline),2,50155,0020-xlsx.xlsx
+38,45817,2,Raptor (baseline),3,52435,0020-xlsx.xlsx
+39,49221,2,Raptor (baseline),4,54932,0020-xlsx.xlsx
+26,45932,3,Raptor (baseline),2,50155,0020-xlsx.xlsx
+33,46413,3,Raptor (baseline),3,52435,0020-xlsx.xlsx
+35,44312,4,Raptor (baseline),2,50155,0020-xlsx.xlsx
+20,50134,3,Raptor (baseline),4,54932,0020-xlsx.xlsx
+39,45220,4,Raptor (baseline),3,52435,0020-xlsx.xlsx
+26,47981,0,Raptor (baseline),2,51777,0021-xlsx.xlsx
+34,47001,4,Raptor (baseline),4,54932,0020-xlsx.xlsx
+26,47392,1,Raptor (baseline),2,51777,0021-xlsx.xlsx
+28,47115,2,Raptor (baseline),2,51777,0021-xlsx.xlsx
+31,45726,3,Raptor (baseline),2,51777,0021-xlsx.xlsx
+0,0,0,Low Entropy - evo,2,50155,0020-xlsx.xlsx
+1,25896,0,High Entropy - evo,2,51777,0021-xlsx.xlsx
+29,47036,4,Raptor (baseline),2,51777,0021-xlsx.xlsx
+3,26386,0,High Entropy - evo,3,52435,0020-xlsx.xlsx
+701,88585,0,Raptor (baseline),2,99559,0014-bmp.bmp
+0,0,0,High Entropy - evo,3,54131,0021-xlsx.xlsx
+1,27402,0,High Entropy - evo,4,54932,0020-xlsx.xlsx
+2,28511,0,High Entropy - evo,4,56708,0021-xlsx.xlsx
+1203,84840,0,Raptor (baseline),2,93894,0034-zip-highcompress.zip
+0,0,0,Low Entropy - evo,3,52435,0020-xlsx.xlsx
+0,0,1,Low Entropy - evo,2,50155,0020-xlsx.xlsx
+2,45277,1,High Entropy - evo,2,51777,0021-xlsx.xlsx
+1,49617,0,Low Entropy - evo,4,56708,0021-xlsx.xlsx
+0,0,1,High Entropy - evo,3,52435,0020-xlsx.xlsx
+358,83890,1,Raptor (baseline),2,93894,0034-zip-highcompress.zip
+3,26960,1,High Entropy - evo,3,54131,0021-xlsx.xlsx
+970,95429,0,Raptor (baseline),3,104084,0014-bmp.bmp
+1,27423,1,High Entropy - evo,4,54932,0020-xlsx.xlsx
+5,42646,1,High Entropy - evo,4,56708,0021-xlsx.xlsx
+64,82932,2,Raptor (baseline),2,93894,0034-zip-highcompress.zip
+1,39399,1,Low Entropy - evo,3,52435,0020-xlsx.xlsx
+6,24968,0,High Entropy - evo,2,50155,0020-xlsx.xlsx
+1,25792,0,Low Entropy - evo,2,51777,0021-xlsx.xlsx
+16,12,0,Low Entropy - evo,2,12,0041-txt.txt
+19,12,1,Low Entropy - evo,2,12,0041-txt.txt
+17,12,2,Low Entropy - evo,2,12,0041-txt.txt
+15,12,3,Low Entropy - evo,2,12,0041-txt.txt
+20,12,4,Low Entropy - evo,2,12,0041-txt.txt
+18,8,0,Low Entropy - evo,3,12,0041-txt.txt
+15,12,1,Low Entropy - evo,3,12,0041-txt.txt
+16,12,2,Low Entropy - evo,3,12,0041-txt.txt
+19,10,3,Low Entropy - evo,3,12,0041-txt.txt
+14,12,4,Low Entropy - evo,3,12,0041-txt.txt
+2,40634,0,Low Entropy - evo,3,54131,0021-xlsx.xlsx
+1,41177,0,Low Entropy - evo,4,54932,0020-xlsx.xlsx
+0,0,0,Low Entropy - evo,3,52435,0020-xlsx.xlsx
+0,0,1,High Entropy - evo,2,50155,0020-xlsx.xlsx
+0,0,1,Low Entropy - evo,2,51777,0021-xlsx.xlsx
+0,0,1,Low Entropy - evo,3,54131,0021-xlsx.xlsx
+0,0,1,Low Entropy - evo,4,54932,0020-xlsx.xlsx
+0,0,2,High Entropy - evo,2,50155,0020-xlsx.xlsx
+2,39015,2,Low Entropy - evo,2,51777,0021-xlsx.xlsx

@@ -1,3 +1,4 @@
+import math
 import multiprocessing
 import struct
 import subprocess
@@ -110,7 +111,7 @@ def get_payload_xor(filename):
 
 
 def get_num_chunks(filename):
-    return int(filename.split("nc")[1].split("_")[0].split(".")[0])
+    return int(filename.split("_nc")[1].split("_")[0].split(".")[0])
 
 
 # load mesa_config.json into a dict:
@@ -296,14 +297,45 @@ with open("test_split.yaml", "w") as o_:
     yaml.dump(results, o_)
 """
 
-
-def run_dna_fountain_command(current_dir, filename, abs_file, dna_fountain_dir, ):
-    if len(glob.glob(f"{current_dir}/datasets/out/ez_{filename}_nc*.fasta")) > 0:
-        print(f"[EZ] Skipping {filename} as it already exists")
-        return
+def run_decode_dna_fountain(current_dir, file, abs_file,  dna_fountain_dir):
+    num_chunks = int(file.split("_nc")[1].split(".")[0])
     command = f"cd {dna_fountain_dir.strip()} && " \
               f"source venv/bin/activate && " \
-              f"python encode.py -f {abs_file} -l 23 -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --alpha 0.07 --out {filename}.fasta && " \
+              f"python decode.py -f {abs_file} -n {num_chunks} -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --fasta --out {file}.out && " \
+              f"cd {current_dir.strip()}"
+    # rename the file to the correct name:
+    base_file = os.path.basename(file)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+                               executable="/bin/bash")
+    stdout, stderr = process.communicate()
+    print(f"{stdout}")
+    print(f"{stderr}")
+    #write stdout and stderr into a single file:
+    with open(f"{current_dir}/datasets/out/{file}.std", "w") as o_:
+        o_.write(f"{stdout.decode('utf-8')}\n")
+        o_.write(f"{stderr.decode('utf-8')}\n")
+    fail = "Could not decode all file" in stderr.decode('utf-8')
+    if not fail:
+        #lines, 223289 chunks are done.
+        print(stderr.decode("utf-8").split("INFO:root:")[-2])
+        overhead = int(stderr.decode("utf-8").split("Done")[0].split("INFO:root:")[-2].split("After reading ")[1].split("lines, ")[0]) - num_chunks #.split(" chunks are done.")[0]
+    else:
+        overhead = -1
+    return {"file": base_file, "chunks": num_chunks, "success": not fail, "overhead": overhead, "stdout": stdout.decode('utf-8'), "stderr": stderr.decode("utf-8")}
+
+def run_dna_fountain_command(current_dir, filename, abs_file, dna_fountain_dir, ):
+    existing_file = glob.glob(f"{current_dir}/datasets/out/ez_{filename}_nc*.fasta")
+    if len(existing_file) > 0:
+        # remove the file:
+        os.remove(existing_file[0])
+        #num_chunks = int(existing_file[0].split("nc")[1].split(".")[0])
+        print(f"[EZ] Deleting {filename} as it already existed")
+        # return
+    file_size = os.path.getsize(abs_file)
+    stop_at = math.ceil(file_size / 20) + 500
+    command = f"cd {dna_fountain_dir.strip()} && " \
+              f"source venv/bin/activate && " \
+              f"python encode.py -f {abs_file} -l 23 -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --alpha 0.07 --out {filename}.fasta --stop {stop_at}&& " \
               f"cp {filename}.fasta {current_dir}/datasets/out/ez_{filename}.fasta && " \
               f"cd {current_dir.strip()}"
     # rename the file to the correct name:
@@ -648,7 +680,7 @@ def decode_for_overhead(fasta_file, repeats=5):
     i = 0
     decoder.correct += 1
     for key, value in fastalines.items():
-        if i > static_number_of_chunks + 100:
+        if i > static_number_of_chunks + 10000:
             # no need to load all packets:
             break
         dna_str = value.replace("\n", "")
@@ -745,6 +777,71 @@ def get_error_pred(fasta_file):
 
 
 if __name__ == "__main__":
+
+    """# Convert ez simulation results to a csv file: 
+    df = pd.read_json("decode_results_ez.json")
+    df.drop("stdout", axis=1, inplace=True)
+    df.drop("stderr", axis=1, inplace=True)
+    df.drop("success", axis=1, inplace=True)
+    df.drop("chunks", axis=1, inplace=True)
+    # iterate over each row, get the filename and take the first 2 characters as the "run", then add this column to the df:
+    df["unrecovered"] = -1
+    df["run"] = df["file"].apply(lambda x: x.split("_")[0])
+    df["file"] = df["file"].apply(lambda x: x.split("_", maxsplit=1)[1])
+    # save df as a csv file:
+    df.to_csv("decode_results_ez.csv", index=False)
+    exit(0)
+    """
+
+    #""
+    def get_method(filename):
+        if filename.startswith("ez"):
+            file = filename.split("_nc")[0].replace("ez_", "")
+            return "DNA Fountain", file, 2, int(filename.split("_nc")[1].split(".")[0])
+        elif "_low_entropy_evo_dist" in filename:
+            file = filename.split("_bmp_low_entropy_evo_dist_")[0]
+            return "Low Entropy - evo", file, int(filename.split("rs")[1].split("_nc")[0]), int(filename.split("_nc")[1].split(".")[0])
+        elif "_evo_compress_encrypt_high_entropy_dist" in filename:
+            file = filename.split("_evo_compress_encrypt_high_entropy_dist_")[0]
+            return "High Entropy - evo", file, int(filename.split("rs")[1].split("_nc")[0]), int(filename.split("_nc")[1].split(".")[0])
+        elif "baseline" in filename:
+            file = filename.split("_raptor_dist_")[0]
+            return "Raptor (baseline)", file, int(filename.split("rs")[1].split("_nc")[0]), int(filename.split("_nc")[1].split("_baseline")[0])
+        elif "raptor_dist" in filename:
+            file = filename.split("_raptor_dist_")[0]
+            return "Raptor", file, int(filename.split("rs")[1].split("_nc")[0]), int(filename.split("_nc")[1].split(".")[0])
+
+    # load overhead_exp.csv:
+    df = pd.read_csv("overhead_exp.csv")
+    df["Method"] =  df.apply(lambda x: get_method(x["file"])[0], axis=1)
+    df["RS"] = df.apply(lambda x: get_method(x["file"])[2], axis=1)
+    df["#Chunks"] = df.apply(lambda x: get_method(x["file"])[3], axis=1)
+    df["File"] = df.apply(lambda x: get_method(x["file"])[1], axis=1)
+    df.drop("file", axis=1, inplace=True)
+    df.to_csv("overhead_exp_parsed.csv", index=False)
+    #exit(0)
+    #"""
+
+
+    """
+    files = glob.glob("exp_in/*.fasta")
+    # sort files by size, smallest first:
+    files = sorted(files, key=lambda x: os.path.getsize(x)) # [:20]
+    res = []
+    for file in files:
+        base_file = os.path.basename(file)
+        abs_path = os.path.abspath(file)
+        current_dir = os.getcwd()
+        dna_fountain_dir = "/home/schwarz/dna-fountain"
+        res.append(run_decode_dna_fountain(current_dir, base_file, abs_path, dna_fountain_dir))
+    # save to a json file:
+    json.dump(res, open("decode_results_ez.json", "w"))
+
+
+    exit(0)
+    """
+    #encode_to_fasta("sleeping_beauty", 0, get_error_correction_encode("reedsolomon", 2), False, True, 2, False,
+    #                raptor_dist, "H", "out_file", 23)
     dna_fountain_dir = "/home/schwarz/dna-fountain"  # "/home/schwarz/dna-fountain"
     # bmp_files = glob.glob("datasets/BMP_tiny/001*-bmp.bmp")
     bmp_files = [f"datasets/BMP_tiny/001{i}-bmp.bmp" for i in range(5)]
@@ -756,8 +853,9 @@ if __name__ == "__main__":
     txt_files = [f"datasets/TXT_tiny/004{i}-txt.txt" for i in range(5)]
 
     all_files = txt_files + xlsx_files + bmp_files + zip_high_files
-    # encode_dataset(all_files)
-    # " ""
+    #encode_dataset(all_files)
+    exit(0)
+    # """
     # set mesa_apikey to the "apikey" from the ENV variables:
     # mesa_apikey = "grM5qnMhlB-UhSAJQt8wXBb4g85Mj6vJ6qrLudOKNLA" #os.getenv("apikey")
     # create errors using mesa:
@@ -783,7 +881,7 @@ if __name__ == "__main__":
 
     # " ""
     # load "overhead.csv":
-    overhead = pd.read_csv("overhead_exp.csv", sep=", ")
+    overhead = pd.read_csv("overhead_exp.csv", sep=",")
     # get all unique files:
     seen_files = overhead["file"].unique()
 
@@ -812,11 +910,18 @@ if __name__ == "__main__":
     file_subset = [(file,) for file in glob.glob(f"{base_folder}/*.fasta") if
                                                  os.path.basename(file).startswith("0") and os.path.basename(
                                                      file) not in seen_files]
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 5) as pool:
+    # filter out every file that has "baseline" in the name:
+    file_subset = [file for file in file_subset if "baseline" not in os.path.basename(file[0])]
+    file_subset = sorted(file_subset, key=lambda x: os.path.getsize(x[0]))  # [:20]
+    res = []
+    for file in file_subset:
+        res.append(decode_for_overhead(*file))
+    #"""
+    with multiprocessing.Pool(processes=2) as pool:
         res = pool.starmap(decode_for_overhead, file_subset)
 
     json.dump(res, open("overhead_results.json", "w"))
-
+    """
     # calculate the entropy of the files:
     # gen_entropy_table()
     # """
