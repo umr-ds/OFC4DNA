@@ -1,6 +1,6 @@
 rnd_dist**
 results.zip
-
+eval/err_nums/**
 final_results/**
 results/
 docker_mount/

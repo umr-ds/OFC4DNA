@@ -127,6 +127,58 @@ directly or using this optimization suite.
 For more information, see the NOREC4DNA repository:
 [https://github.com/umr-ds/NOREC4DNA](https://github.com/umr-ds/NOREC4DNA)
 
+## Usage of the created code:
+The following script comes bundled with all previously introduced improvements and can be used to encode and decode files using the optimized distribution functions.
+TO add new distribution functions, you can add them to the dists.json file as demonstrated in the commented code of codec.py. 
+The distribution has to be normalized and scaled as shown in for the existing functions (see codec.py for examples).
+
+To encode you can run:
+```bash
+$ python codec.py Dorn --encode --insert_header --error_correction reedsolomon --repair_symbols 2 --seed_spacing 2 --use_payload_xor --seed_len_str H --chunk_size 69 --overhead 2.0
+number_of_chunks from chunk_size: 72
+Saved result at: Dorn_encoded.fasta
+``` 
+
+To decode the fasta file you need to specify the number of chunks:
+```bash
+$ python codec.py Dorn_encoded.fasta --decode --insert_header --error_correction reedsolomon --repair_symbols 2 --seed_spacing 2 --use_payload_xor --seed_len_str H --number_of_chunks 72
+```
+
+
+Overview:
+```bash
+$ python codec.py --help
+usage: codec.py [-h] [--encode] [--decode] [--dist dist] [--error_correction error_correction] [--insert_header] [--number_of_chunks number_of_chunks] [--repair_symbols repair_symbols] [--seed_spacing seed_spacing] [--use_seed_xor]
+                [--use_payload_xor] [--seed_len_str SEED_LEN_STR] [--chunk_size CHUNK_SIZE] [--overhead OVERHEAD]
+                file
+
+Encode and decode a file using our improved fountain code-based scheme.
+
+positional arguments:
+  file                  the file / folder to Decode
+
+options:
+  -h, --help            show this help message and exit
+  --encode              Encode the file.
+  --decode              Decode the file.
+  --dist dist
+  --error_correction error_correction
+                        Error Correction Method to use; possible values: nocode, crc, reedsolomon, dna_reedsolomon (default=nocode)
+  --insert_header
+  --number_of_chunks number_of_chunks
+  --repair_symbols repair_symbols
+                        number of repair symbols for ReedSolomon (default=2)
+  --seed_spacing seed_spacing
+                        spacing between seeds (default=2)
+  --use_seed_xor
+  --use_payload_xor
+  --seed_len_str SEED_LEN_STR
+                        seed length format (default=I)
+  --chunk_size CHUNK_SIZE
+                        chunk size (default=0)
+  --overhead OVERHEAD   overhead (default=3.0)
+```
+
 ## Cite
 
 If you use this software in your research, please cite the following paper:

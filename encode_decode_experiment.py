@@ -296,6 +296,30 @@ def run_decode_dna_fountain(current_dir, file, abs_file, dna_fountain_dir):
     return {"file": base_file, "chunks": num_chunks, "success": not fail, "overhead": overhead,
             "stdout": stdout.decode('utf-8'), "stderr": stderr.decode("utf-8")}
 
+def run_decode_dna_fountain(current_dir, file, abs_file,  dna_fountain_dir):
+    num_chunks = file.split("_nc")[1].split(".")[0]
+    command = f"cd {dna_fountain_dir.strip()} && " \
+              f"source venv/bin/activate && " \
+              f"python decode.py -f {abs_file} -n {num_chunks} -m 3 --gc 0.10 --rs 2 --delta 0.05 --c_dist 0.1 --fasta --out {file}.out && " \
+              f"cd {current_dir.strip()}"
+    # rename the file to the correct name:
+    base_file = os.path.basename(file)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+                               executable="/bin/bash")
+    stdout, stderr = process.communicate()
+    print(f"{stdout}")
+    print(f"{stderr}")
+    #write stdout and stderr into a single file:
+    with open(f"{current_dir}/datasets/out/{file}.std", "w") as o_:
+        o_.write(f"{stdout.decode('utf-8')}\n")
+        o_.write(f"{stderr.decode('utf-8')}\n")
+    fail = "Could not decode all file" in stderr.decode('utf-8')
+    if not fail:
+        #lines, 223289 chunks are done.
+        overhead = stderr.split("lines, ")[1].split(" chunks are done.")[0]
+    else:
+        overhead = -1
+    return {"file": base_file, "chunks": num_chunks, "success": not fail, "overhead": overhead, "stdout": stdout.decode('utf-8'), "stderr": stderr.decode("utf-8")}
 
 def run_dna_fountain_command(current_dir, filename, abs_file, dna_fountain_dir, ):
     existing_file = glob.glob(f"{current_dir}/datasets/out/ez_{filename}_nc*.fasta")
@@ -378,11 +402,11 @@ def process_file(file):
     full_path = os.path.abspath(file)
 
     # encode using Grass code:
-    run_grass_command(current_dir, file_name, full_path)
+    #run_grass_command(current_dir, file_name, full_path)
     # encode using DNA Fountain:
     run_dna_fountain_command(current_dir, file_name, full_path, dna_fountain_dir)
     # encode using optimized codes:
-    run_encode_own(current_dir, file_name, full_path)
+    #run_encode_own(current_dir, file_name, full_path)
 
     os.chdir(current_dir)
 
@@ -763,6 +787,9 @@ if __name__ == "__main__":
     txt_files = [f"datasets/TXT_tiny/004{i}-txt.txt" for i in range(lim)]
 
     all_files = txt_files + xlsx_files + bmp_files + zip_high_files
+    encode_dataset(all_files)
+    # exit(0)
+    # " ""
 
     # encode all files:
     """

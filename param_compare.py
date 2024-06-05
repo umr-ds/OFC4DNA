@@ -222,6 +222,7 @@ def get_packets(seed_struct_str="H"):
     data = [(0, 0), (1118, 945), (1606, 1153), (1982, 1262), (2280, 1353), (2341, 1460), (2407, 1434), (2559, 1482)]
     # data for 2 byte seed (typically used rules):
     data = [(0, 0), (26262, 10493), (26398, 10675), (26434, 10689), (26393, 10730), (26369, 10639), (26334, 10742), (26311, 10757), (26461, 10700)]
+    
     # data for 4 byte seed (laxer rules, long sequences):
     data = [(0, 0), (153358975, 129382698), (208309123, 165962976), (289514196, 187265992), (338349469, 198733809), (351124970, 208058394), (367586972, 210544770), (376977775, 213091391)]
     #data for 4 byte seed (typically used rules):
@@ -264,6 +265,10 @@ def get_packets(seed_struct_str="H"):
     plt.savefig(
         f"max_hp_2_additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.svg",
         format="svg",
+        dpi=1200)
+    plt.savefig(
+        f"max_hp_2_additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.eps",
+        format="eps",
         dpi=1200)
     plt.savefig(
         f"max_hp_2_additional_valid_invalid_packets_{'H' if seed_struct_str == 'H' else 'I'}{'_payloadxor' if i else ''}.pdf",
@@ -390,6 +395,7 @@ def plot_max_possible_unique_packets_per_deg(n, seed_len=2):
     plt.autoscale()
 
     plt.savefig(f"max_unique_packets_per_deg_{n}_{seed_len}.svg", format="svg", dpi=1200)
+    plt.savefig(f"max_unique_packets_per_deg_{n}_{seed_len}.eps", format="eps", dpi=1200)
     plt.savefig(f"max_unique_packets_per_deg_{n}_{seed_len}.pdf", bbox_inches="tight")
     plt.show(block=False)
 
@@ -479,10 +485,7 @@ if __name__ == "__main__":
         # if not any(err_nums[:250]):
         if err_nums[96] >= 1.0 and err_nums[100] >= 1.0 and err_nums[0] < 0.5:
             print(file)
-    exit(0)
 
-    exit(0)
-    """
     create_new_param_compare_csv()
     plot_entropy_vs_xor_payload_vs_rule_violating_packets("eval/param_compare/param_compare_2023-09-08_16-01-23.csv")
 
@@ -502,7 +505,7 @@ if __name__ == "__main__":
     plot_max_possible_unique_packets_per_deg(50000, 4)
 
     parse_all_files()
-    """
+
     get_packets("I")
     # get_packets("I")
     """
