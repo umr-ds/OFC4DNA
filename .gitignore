@@ -4,7 +4,13 @@ eval/err_nums/**
 final_results/**
 results/
 docker_mount/
+clusts/centroid**
+clusts/**.uc
 venv39/
+datasets/**
+
+**.eps
+**.pdf
 # PyCharm-Files
 .idea/
 workspace.xml
